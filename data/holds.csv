@@ -1,3 +1,10 @@
 name,region,x_cord,y_cord,defense_rating,size
-Highgarden,Reach,835,713,30,Large
-Winterfell,North,1205,2838,78,Large
+Highgarden,Reach,835,713,0,Large
+Winterfell,North,1205,2838,0,Large
+Sunspear,Dorne,1923,203,0,Large
+Storm's End,The Stormlands,1755,843,0,Large
+Casterly Rock,The Westerlands,596,1310,0,Large
+King's Landing,The Crownlands,1501,1192,0,Large
+Riverrun,The Riverlands,1022,1583,0,Large
+The Eyrie,The Vale,1675,1820,0,Large
+Pike,The Iron Islands,601,1756,0,Large
