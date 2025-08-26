@@ -1,5 +1,6 @@
 import pyglet
 import math
+import csv
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -28,25 +29,18 @@ last_mouse_x, last_mouse_y = 0, 0
 scroll_dx = 0.0
 scroll_dy = 0.0
 
-hold = {
-    "name"              : "Highgarden",
-    "region"            : "Reach",
-    "x_cord"            : "835",
-    "y_cord"            : "713",
-    "defense_rating"    : "30",
-    "size"              : "Large"
-}
-
-hold1 = {
-    "name"              : "Winterfell",
-    "region"            : "North",
-    "x_cord"            : "1205",
-    "y_cord"            : "2838",
-    "defense_rating"    : "78",
-    "size"              : "Large"
-}
-
-holds = [hold, hold1]
+holds = []
+with open("data/holds.csv", newline="", encoding="utf-8") as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        holds.append({
+            "name": row.get("name", ""),
+            "region": row.get("region", ""),
+            "x_cord": row.get("x_cord", "0"),
+            "y_cord": row.get("y_cord", "0"),
+            "defense_rating": row.get("defense_rating", "0"),
+            "size": row.get("size", "Small")
+        })
 
 debug_label = pyglet.text.Label(
     '', 
@@ -66,6 +60,7 @@ def screen_to_world(sx, sy):
 def world_to_screen(wx, wy):
     return ((wx - camera_x) * zoom, (wy - camera_y) * zoom)
 
+# Create hold markers
 hold_markers = []
 for h in holds:
     if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
