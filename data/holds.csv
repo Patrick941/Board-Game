@@ -1,25 +1,25 @@
 name,region,x_cord,y_cord,defense_rating,size
-Highgarden,Reach,835,713,0,Large
-Winterfell,North,1205,2838,0,Large
+Highgarden,The Reach,835,713,0,Large
+Winterfell,The North,1205,2838,0,Large
 Sunspear,Dorne,1923,203,0,Large
 Storm's End,The Stormlands,1755,843,0,Large
 Casterly Rock,The Westerlands,596,1310,0,Large
 King's Landing,The Crownlands,1501,1192,0,Large
 Riverrun,The Riverlands,1022,1583,0,Large
 The Eyrie,The Vale,1675,1820,0,Large
-Pike,The Iron Islands,601,1756,0,Large
-Last Hearth,North,1524,3240,0,Medium
-Karhold,North,1860,3130,0,Medium
-The Dreadfort,North,1633,2922,0,Medium
-Deepwood Motte,North,897,3047,0,Medium
-Torrhen's Square,North,958,2729,0,Medium
-Castle Cerwyn,North,1259,2725,0,Small
-Hornwood,North,1543,2689,0,Small
-Widow's Watch,North,1923,2521,0,Small
-Ramsgate,North,1695,2542,0,Small
-White Harbor,North,1421,2443,0,Medium
-Barrowton,North,922,2493,0,Small
-Moat Cailin,North,1248,2370,0,Medium
-Oldcastle,North,1462,2324,0,Small
+Pyke,The Iron Islands,601,1756,0,Large
+Last Hearth,The North,1524,3240,0,Medium
+Karhold,The North,1860,3130,0,Medium
+The Dreadfort,The North,1633,2922,0,Medium
+Deepwood Motte,The North,897,3047,0,Medium
+Torrhen's Square,The North,958,2729,0,Medium
+Castle Cerwyn,The North,1259,2725,0,Small
+Hornwood,The North,1543,2689,0,Small
+Widow's Watch,The North,1923,2521,0,Small
+Ramsgate,The North,1695,2542,0,Small
+White Harbor,The North,1421,2443,0,Medium
+Barrowton,The North,922,2493,0,Small
+Moat Cailin,The North,1248,2370,0,Medium
+Oldcastle,The North,1462,2324,0,Small
 Greywater Watch,1078,2137,0,Medium
 Flint's Finger,643,2248,0,Medium

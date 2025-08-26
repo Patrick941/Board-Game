@@ -29,17 +29,33 @@ last_mouse_x, last_mouse_y = 0, 0
 scroll_dx = 0.0
 scroll_dy = 0.0
 
+house_region = {
+    "Tyrell": "The Reach",
+    "Stark": "The North",
+    "Arryn": "The Vale",
+    "Tully": "The Riverlands",
+    "Baratheon": "The Stormlands",
+    "Martell": "Dorne",
+    "Lannister": "The Westerlands",
+    "Greyjoy": "The Iron Islands",
+    "NA": "The Crownlands"
+}
+
 holds = []
 with open("data/holds.csv", newline="", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
+        region_name = row.get("region", "")
+        house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
+        
         holds.append({
             "name": row.get("name", ""),
-            "region": row.get("region", ""),
+            "region": region_name,
             "x_cord": row.get("x_cord", "0"),
             "y_cord": row.get("y_cord", "0"),
             "defense_rating": row.get("defense_rating", "0"),
-            "size": row.get("size", "Small")
+            "size": row.get("size", "Small"),
+            "house": house_name
         })
 
 debug_label = pyglet.text.Label(
@@ -60,7 +76,18 @@ def screen_to_world(sx, sy):
 def world_to_screen(wx, wy):
     return ((wx - camera_x) * zoom, (wy - camera_y) * zoom)
 
-# Create hold markers
+house_colors = {
+    "Tyrell": (150, 255, 150),
+    "Stark": (200, 200, 200),
+    "Arryn": (173, 216, 255),
+    "Tully": (186, 85, 216),
+    "Baratheon": (255, 255, 100),
+    "Martell": (255, 165, 50),
+    "Lannister": (255, 70, 70),
+    "Greyjoy": (50, 160, 160),
+    "NA": (128, 0, 128)
+}
+
 hold_markers = []
 for h in holds:
     if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
@@ -78,7 +105,16 @@ for h in holds:
             castle_img = small_castle_image
         sprite = pyglet.sprite.Sprite(castle_img, x=0, y=0)
         sprite.scale = 0.5
-        hold_markers.append({"world": (wx, wy), "sprite": sprite, "data": h})
+        
+        house = h.get("house", "")
+        sprite.color = house_colors.get(house, (255, 255, 255)) 
+        
+        hold_markers.append({
+            "world": (wx, wy),
+            "sprite": sprite,
+            "data": h,
+            "size": size
+        })
 
 @window.event
 def on_draw():
@@ -87,10 +123,21 @@ def on_draw():
     background.draw()
     for m in hold_markers:
         sx, sy = world_to_screen(*m["world"])
-        m["sprite"].x = sx - 50
-        m["sprite"].y = sy - 50
-        m["sprite"].scale = zoom * 0.125
+    
+        if m["size"] == "large":
+            m["sprite"].scale = zoom * 0.125
+            m["sprite"].x = sx - 50
+            m["sprite"].y = sy - 50
+        elif m["size"] == "medium":
+            m["sprite"].scale = zoom * 0.075
+            m["sprite"].x = sx - 40
+            m["sprite"].y = sy - 40
+        else:
+            m["sprite"].scale = zoom * 0.05
+            m["sprite"].x = sx - 30
+            m["sprite"].y = sy - 30
         m["sprite"].draw()
+
     debug_text = ''
     for var_name in debug_vars:
         value = globals().get(var_name, 'N/A')
