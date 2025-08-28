@@ -1,117 +1,117 @@
-name,region,x_cord,y_cord,defense_rating,size
-Highgarden,The Reach,835,713,0,Large
-Winterfell,The North,1205,2838,0,Large
-Sunspear,Dorne,1923,203,0,Large
-Storm's End,The Stormlands,1755,843,0,Large
-Casterly Rock,The Westerlands,596,1310,0,Large
-King's Landing,The Crownlands,1501,1192,0,Large
-Riverrun,The Riverlands,1022,1583,0,Large
-The Eyrie,The Vale,1675,1820,0,Large
-Pyke,The Iron Islands,601,1756,0,Large
-Last Hearth,The North,1524,3240,0,Medium
-Karhold,The North,1860,3130,0,Medium
-The Dreadfort,The North,1633,2922,0,Medium
-Deepwood Motte,The North,897,3047,0,Medium
-Torrhen's Square,The North,958,2729,0,Medium
-Castle Cerwyn,The North,1259,2725,0,Small
-Hornwood,The North,1543,2689,0,Small
-Widow's Watch,The North,1923,2521,0,Small
-Ramsgate,The North,1695,2542,0,Small
-White Harbor,The North,1421,2443,0,Medium
-Barrowton,The North,922,2493,0,Small
-Moat Cailin,The North,1248,2370,0,Medium
-Oldcastle,The North,1462,2324,0,Small
-Greywater Watch,The North,1078,2137,0,Medium
-Flint's Finger,The North,643,2248,0,Medium
-Bear Island,The North,826,3256,0,Small
-Sisterton,The Vale,1525,2242,0,Medium
-Coldwater,The Vale,1756,2103,0,Medium
-Heart's Home,The Vale,1745,1926,0,Small
-Longbow Hall,The Vale,1911,1979,0,Small
-Old Anchor,The Vale,1900,1843,0,Small
-Ironoaks,The Vale,1798,1767,0,Small
-Runestone,The Vale,1980,1774,0,Small
-Gulltown,The Vale,1951,1729,0,Medium
-Redfort,The Vale,1751,1633,0,Small
-Wickenden,The Vale,1729,1542,0,Small
-Saltpans,The Vale,1480,1603,0,Small
-Snakewood,The Vale,1802,2042,0,Small
-Strongsong,The Vale,1458,1913,0,Small
-Hammerhorn,The Iron Islands,500,1816,0,Small
-Ten Towers,The Iron Islands,743,1828,0,Small
-The Twins,The Riverlands,1122,1984,0,Medium
-Seagard,The Riverlands,1072,1901,0,Medium
-Fairmarket,The Riverlands,1175,1741,0,Small
-Raventree Hall,The Riverlands,992,1680,0,Small
-Pinkmaiden,The Riverlands,1038,1474,0,Medium
-Acorn Hall,The Riverlands,1112,1503,0,Medium
-Stoney Sept,The Riverlands,1112,1381,0,Medium
-Harrenhall,The Riverlands,1360,1534,0,Medium
-Maidenpool,The Riverlands,1632,1476,0,Medium
-Crakehall,The Westerlands,482,1053,0,Small
-Silverhill,The Westerlands,848,1086,0,Medium
-Starsfield,The Westerlands,743,1347,0,Small
-Deep Den,The Westerlands,885,1347,0,Small
-Hornvale,The Westerlands,976,1412,0,Small
-Golden Tooth,The Westerlands,725,1416,0,Medium
-Ashemark,The Westerlands,801,1518,0,Medium
-The Crag,The Westerlands,681,1604,0,Medium
-Banefort,The Westerlands,684,1688,0,Small
-Faircastle,The Westerlands,552,1476,0,Medium 
-Feastfires,The Westerlands,434,1327,0,Medium
-Riverspring,The Westerlands,1045,1323,0,Small
-Dyre Den,The Crownlands,1927,1547,0,Small
-Antlers,The Crownlands,1513,1417,0,Small
-Rook's Rest,The Crownlands,1780,1419,0,Medium
-Duskendale,The Crownlands,1642,1313,0,Medium
-Rosby,The Crownlands,1593,1253,0,Small
-Dragonstone,The Crownlands,1904,1386,0,Medium
-Sharp Point,The Crownlands,1883,1267,0,Small
-Stonedance,The Crownlands,1879,1200,0,Small
-Haysack Hall,The Stormlands,1837,988,0,Small
-Bronzegate,The Stormlands,1752,951,0,Medium
-Felwood,The Stormlands,1644,895,0,Small
-Evenfall Hall,The Stormlands,1959,879,0,Medium
-Rain House,The Stormlands,1968,739,0,Small
-Greenstone,The Stormlands,1940,598,0,Small
-Mistwood,The Stormlands,1812,551,0,Medium
-Stonehelm,The Stormlands,1606,618,0,Small
-Crow's Nest,The Stormlands,1643,713,0,Medium
-Blackhaven,The Stormlands,1453,651,0,Medium
-Wyl,Dorne,1402,570,0,Medium
-Blackmont,Dorne,939,424,0,Medium
-Starfell,Dorne,859,273,0,Medium
-Kingsgrave,Dorne,1140,498,0,Medium
-Skyereach,Dorne,1124,401,0,Small
-Hellbolt,Dorne,1155,256,0,Medium
-Sandstone,Dorne,1002,195,0,Medium
-Yronwood,Dorne,1331,410,0,Medium
-The Tot,Dorne,1606,338,0,Medium
-Vaith,Dorne,1525,189,0,Small
-Salt Shore,Dorne,1621,104,0,Medium
-Godsgrace,Dorne,1664,259,0,Medium
-Lemonwood,Dorne,1833,158,0,Medium
-Ghost Hill,Dorne,1910,366,0,Small
-Tumbleton,The Reach,1357,1072,0,Small
-Bitterbridge,The Reach,1196,994,0,Medium
-Grassy Vale,The Reach,1327,893,0,Medium
-Longtable,The Reach,1100,882,0,Medium
-Ashford,The Reach,1181,760,0,Medium
-Cider Hall,The Reach,992,804,0,Medium
-Goldengrove,The Reach,840,953,0,Medium
-Red Lake,The Reach,667,1001,0,Small
-Old Oak,The Reach,556,903,0,Medium
-Lord Hewett's Town,The Reach,623,793,0,Small
-Nightsong,The Reach,1091,612,0,Small
-Horn Hill,The Reach,821,603,0,Small
-Brightwater Keep,The Reach,604,624,0,Medium
-Bandallon,The Reach,484,607,0,Small
-Honeyholt,The Reach,632,546,0,Small
-Uplands,The Reach,703,451,0,Small
-Oldtown,The Reach,569,475,0,Medium
-Blackcrown,The Reach,467,409,0,Medium
-Three Towers,The Reach,528,308,0,Medium
-Sunhouse,The Reach,696,211,0,Small
-The Arbor,The Reach,428,165,0,Medium
+name,region,x_cord,y_cord,defense_rating,size,borders
+Highgarden,The Reach,835,713,0,Large,Horn Hill|Cider Hall|Lord Hewett's Town|Goldengrove
+Winterfell,The North,1205,2838,0,Large,Deepwood Motte|The Dreadfort|Castle Cerwyn|Torrhen's Square
+Sunspear,Dorne,1923,203,0,Large,Ghost Hill|Godsgrace|Lemonwood
+Storm's End,The Stormlands,1755,843,0,Large,Felwood|Bronzegate|Evenfall Hall|Rain House
+Casterly Rock,The Westerlands,596,1310,0,Large,Silverhill|Crakehall|Feastfires|Starsfield
+King's Landing,The Crownlands,1501,1192,0,Large,Stoney Sept|Tumbleton|Rosby|Antlers
+Riverrun,The Riverlands,1022,1583,0,Large,Acorn Hall|Ashemark|Pinkmaiden|Raventree Hall
+The Eyrie,The Vale,1675,1820,0,Large,Ironoaks|Heart's Home
+Pyke,The Iron Islands,601,1756,0,Large,Hammerhorn|Ten Towers|Banefort
+Last Hearth,The North,1524,3240,0,Medium,Karhold|The Dreadfort
+Karhold,The North,1860,3130,0,Medium,Last Hearth|The Dreadfort
+The Dreadfort,The North,1633,2922,0,Medium,Karhold|Last Hearth|Winterfell|Hornwood
+Deepwood Motte,The North,897,3047,0,Medium,Torrhen's Square|Winterfell|Bear Island
+Torrhen's Square,The North,958,2729,0,Medium,Castle Cerwyn|Winterfell|Barrowton|Deepwood Motte
+Castle Cerwyn,The North,1259,2725,0,Small,Hornwood|Torrhen's Square|Moat Cailin|Winterfell
+Hornwood,The North,1543,2689,0,Small,The Dreadfort|Castle Cerwyn|Ramsgate
+Widow's Watch,The North,1923,2521,0,Small,Ramsgate
+Ramsgate,The North,1695,2542,0,Small,White Harbor|Hornwood|Widow's Watch
+White Harbor,The North,1421,2443,0,Medium,Moat Cailin|Oldcastle|Ramsgate
+Barrowton,The North,922,2493,0,Small,Moat Cailin|Torrhen's Square
+Moat Cailin,The North,1248,2370,0,Medium,Greywater Watch|White Harbor|Barrowton|Castle Cerwyn
+Oldcastle,The North,1462,2324,0,Small,White Harbor|Kamsgate
+Greywater Watch,The North,1078,2137,0,Medium,The Twins|Flint's Finger|Moat Cailin
+Flint's Finger,The North,643,2248,0,Medium,Greywater Watch
+Bear Island,The North,826,3256,0,Small,Deepwood Motte
+Sisterton,The Vale,1525,2242,0,Medium,Coldwater
+Coldwater,The Vale,1756,2103,0,Medium,Snakewood|Sisterton
+Heart's Home,The Vale,1745,1926,0,Small,The Eyrie|Strongsong|Snakewood|Longbow Hall
+Longbow Hall,The Vale,1911,1979,0,Small,Old Anchor|Snakewood|Heart's Home
+Old Anchor,The Vale,1900,1843,0,Small,Ironoaks|Longbow Hall
+Ironoaks,The Vale,1798,1767,0,Small,The Eyrie|Old Anchor|Runestone|Gulltown
+Runestone,The Vale,1980,1774,0,Small,Gulltown|Ironoaks
+Gulltown,The Vale,1951,1729,0,Medium,Runestone|Ironoaks|Redfort
+Redfort,The Vale,1751,1633,0,Small,Wickenden|Iron Oaks|Gulltown
+Wickenden,The Vale,1729,1542,0,Small,Saltpans|Redfort
+Saltpans,The Vale,1480,1603,0,Small,Harrenhall|Wickenden
+Snakewood,The Vale,1802,2042,0,Small,Coldwater|Longbow Hall|Heart's Home
+Strongsong,The Vale,1458,1913,0,Small,The Twins|Heart's Home
+Hammerhorn,The Iron Islands,500,1816,0,Small,Pyke
+Ten Towers,The Iron Islands,743,1828,0,Small,Pyke
+The Twins,The Riverlands,1122,1984,0,Medium,Seagard|Greywater Watch|Strongsong
+Seagard,The Riverlands,1072,1901,0,Medium,Fairmarket|The Twins
+Fairmarket,The Riverlands,1175,1741,0,Small,Raventree Hall|Seagard
+Raventree Hall,The Riverlands,992,1680,0,Small,Banefort|Riverrun|Fairmarket
+Pinkmaiden,The Riverlands,1038,1474,0,Medium,Hornvale|Stoney Sept|Pinkmaiden|Riverrun|Acorn Hall
+Acorn Hall,The Riverlands,1112,1503,0,Medium,Harrenhall|Pinkmaiden|Stoney Sept|Riverrun
+Stoney Sept,The Riverlands,1112,1381,0,Medium,King's Landing|Riverspring|Hornvale|Pinkmaiden|Acorn Hall
+Harrenhall,The Riverlands,1360,1534,0,Medium,Acorn Hall|Maidenpool|Antlers|Saltpans
+Maidenpool,The Riverlands,1632,1476,0,Medium,Rook's Rest|Antlers|Harrenhall
+Crakehall,The Westerlands,482,1053,0,Small,Red Lake|Old Oak|Casterly Rock
+Silverhill,The Westerlands,848,1086,0,Medium,Starsfield|Casterly Rock|Goldengrove
+Starsfield,The Westerlands,743,1347,0,Small,Golden Tooth|Deep Den|Casterly Rock|Silverhill
+Deep Den,The Westerlands,885,1347,0,Small,Golden Tooth|Starsfield|Hornvale|Riverspring
+Hornvale,The Westerlands,976,1412,0,Small,Golden Tooth| Deep Den|Riverspring|Pinkmaiden|Stoney Sept
+Golden Tooth,The Westerlands,823,1416,0,Medium,Ashemark|Starsfield|Deep Den|Hornvale
+Ashemark,The Westerlands,801,1518,0,Medium,The Crag|Golden Tooth|Riverrun
+The Crag,The Westerlands,681,1604,0,Medium,Banefort|Faircastle|Ashemark
+Banefort,The Westerlands,684,1688,0,Small,The Crag|Pyke|Raventree Hall
+Faircastle,The Westerlands,552,1476,0,Medium ,Feastfires|The Crag
+Feastfires,The Westerlands,434,1327,0,Medium,Faircastle|Casterly Rock
+Riverspring,The Westerlands,1045,1323,0,Small,Stoney Sept|Hornvale|Deep Den
+Dyre Den,The Crownlands,1927,1547,0,Small,Rook's Rest
+Antlers,The Crownlands,1513,1417,0,Small,Maidenpool|Duskendale|Harrenhall|King's Landing
+Rook's Rest,The Crownlands,1780,1419,0,Medium,Maidenpool|Dyre Den|Duskendale|Dragonstone
+Duskendale,The Crownlands,1642,1313,0,Medium,Antlers|Rosby|Rook's Rest
+Rosby,The Crownlands,1593,1253,0,Small,King's Landing|Duskendale
+Dragonstone,The Crownlands,1904,1386,0,Medium,Sharp Point|Rook's Rest
+Sharp Point,The Crownlands,1883,1267,0,Small,Stonedance|Dragonstone
+Stonedance,The Crownlands,1879,1200,0,Small,Haysack Hall|Sharp Point
+Haysack Hall,The Stormlands,1837,988,0,Small,Bronzegate|Evenfall Hall|Stonedance
+Bronzegate,The Stormlands,1752,951,0,Medium,Felwood|Storm's End|Haysack Hall
+Felwood,The Stormlands,1644,895,0,Small,Storm's End|Bronzegate|Grassy Vale|Tumbleton
+Evenfall Hall,The Stormlands,1959,879,0,Medium,Rain House|Storm's End|Haysack Hall
+Rain House,The Stormlands,1968,739,0,Small,Greenstone|Evenfall Hall| Storm's End
+Greenstone,The Stormlands,1940,598,0,Small,Mistwood|Rain House
+Mistwood,The Stormlands,1812,551,0,Medium,Stonehelm
+Stonehelm,The Stormlands,1606,618,0,Small,Crow's Nest|Blackhaven|Mistwood
+Crow's Nest,The Stormlands,1643,713,0,Medium,Stonehelm
+Blackhaven,The Stormlands,1453,651,0,Medium,Wyl|Stonehelm
+Wyl,Dorne,1402,570,0,Medium,Blackhaven|Yronwood
+Blackmont,Dorne,939,424,0,Medium,Starfall|Skyereach|Horn Hill
+Starfall,Dorne,859,273,0,Medium,Blackmont|Sandstone|Sunhouse
+Kingsgrave,Dorne,1140,498,0,Medium,Skyereach|Nightsong
+Skyereach,Dorne,1124,401,0,Small,Blackmont|Kingsgrave|Yronwood|Hellbolt
+Hellbolt,Dorne,1155,256,0,Medium,Sandstone|Skyereach
+Sandstone,Dorne,1002,195,0,Medium,Hellbolt|Starfall
+Yronwood,Dorne,1331,410,0,Medium,The Tot|Vaith|Skyereach|Wyl
+The Tot,Dorne,1606,338,0,Medium,Godsgrace|Yronwood
+Vaith,Dorne,1525,189,0,Small,Salt Shore|Godsgrace|Yronwood
+Salt Shore,Dorne,1621,104,0,Medium,Lemonwood|Vaith
+Godsgrace,Dorne,1664,259,0,Medium,The Tot|Lemonwood|Sunspear|Vaith
+Lemonwood,Dorne,1833,158,0,Medium,Sunspear|Godsgrace|Salt Shore
+Ghost Hill,Dorne,1910,366,0,Small,Sunspear
+Tumbleton,The Reach,1357,1072,0,Small,Bitterbridge|King's Landing|Felwood
+Bitterbridge,The Reach,1196,994,0,Medium,Longtable|Grassy Vale|Tumbleton
+Grassy Vale,The Reach,1327,893,0,Medium,Longtable|Bitterbridge|Felwood
+Longtable,The Reach,1100,882,0,Medium,Cider Hall|Grassy Vale|Bitterbridge|Ashford
+Ashford,The Reach,1181,760,0,Medium,Cider Hall|Longtable|Nightsong
+Cider Hall,The Reach,992,804,0,Medium,Highgarden|Longtable|Ashford
+Goldengrove,The Reach,840,953,0,Medium,Silverhill|Highgarden
+Red Lake,The Reach,667,1001,0,Small,Crakehall|Old Oak
+Old Oak,The Reach,556,903,0,Medium,Crakehall|Red Lake|Lord Hewett'sTown
+Lord Hewett's Town,The Reach,623,793,0,Small,Highgarden|Old Oak
+Nightsong,The Reach,1091,612,0,Small,Ashford|Kingsgrave
+Horn Hill,The Reach,821,603,0,Small,Brightwater Keep|Highgarden|Blackmont
+Brightwater Keep,The Reach,604,624,0,Medium,Honeyholt|Bandallon|Horn Hill
+Bandallon,The Reach,484,607,0,Small,Oldtown|Brightwater Keep
+Honeyholt,The Reach,632,546,0,Small,Oldtown|Uplands|Brightwater Keep
+Uplands,The Reach,703,451,0,Small,Oldtown|Honeyholt|Three Towers
+Oldtown,The Reach,569,475,0,Medium,Blackcrown|Uplands|Three Towers|Bandallon|Honeyholt
+Blackcrown,The Reach,467,409,0,Medium,Oldtown
+Three Towers,The Reach,528,308,0,Medium,The Arbor|Sunhouse|Oldtown|Uplands
+Sunhouse,The Reach,696,211,0,Small,Three Towers|Starfall
+The Arbor,The Reach,428,165,0,Medium,Three Towers
 
 

@@ -14,7 +14,7 @@ large_castle_image = pyglet.image.load("Images/Large_Castle_Icon.png")
 
 camera_x = 0.0
 camera_y = 0.0
-camera_speed = 300
+camera_speed = 200
 zoom = 1
 min_zoom = 0.465
 max_zoom = 3.0
@@ -29,6 +29,8 @@ last_mouse_x, last_mouse_y = 0, 0
 scroll_dx = 0.0
 scroll_dy = 0.0
 
+CSV_REFRESH_INTERVAL = 5.0  # seconds, can be changed easily
+
 house_region = {
     "Tyrell": "The Reach",
     "Stark": "The North",
@@ -42,21 +44,7 @@ house_region = {
 }
 
 holds = []
-with open("data/holds.csv", newline="", encoding="utf-8") as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        region_name = row.get("region", "")
-        house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
-        
-        holds.append({
-            "name": row.get("name", ""),
-            "region": region_name,
-            "x_cord": row.get("x_cord", "0"),
-            "y_cord": row.get("y_cord", "0"),
-            "defense_rating": row.get("defense_rating", "0"),
-            "size": row.get("size", "Small"),
-            "house": house_name
-        })
+hold_markers = []
 
 debug_label = pyglet.text.Label(
     '', 
@@ -88,48 +76,91 @@ house_colors = {
     "NA": (128, 0, 128)
 }
 
-hold_markers = []
-for h in holds:
-    if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
-        try:
-            wx = float(h["x_cord"])
-            wy = float(h["y_cord"])
-        except ValueError:
-            continue
-        size = h.get("size", "Small").lower()
-        if size == "large":
-            castle_img = large_castle_image
-        elif size == "medium":
-            castle_img = medium_castle_image
-        else:
-            castle_img = small_castle_image
-        sprite = pyglet.sprite.Sprite(castle_img, x=0, y=0)
-        sprite.scale = 0.5
-        
-        house = h.get("house", "")
-        sprite.color = house_colors.get(house, (255, 255, 255)) 
-        
-        hold_markers.append({
-            "world": (wx, wy),
-            "sprite": sprite,
-            "data": h,
-            "size": size
-        })
-        
-def draw_polygon(coords):
+def load_holds(dt=None):
+    global holds, hold_markers
+    holds = []
+    hold_markers = []
+
+    with open("data/holds.csv", newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            region_name = row.get("region", "")
+            house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
+            
+            h = {
+                "name": row.get("name", ""),
+                "region": region_name,
+                "x_cord": row.get("x_cord", "0"),
+                "y_cord": row.get("y_cord", "0"),
+                "defense_rating": row.get("defense_rating", "0"),
+                "size": row.get("size", "Small"),
+                "house": house_name,
+                "borders": row.get("borders", "..")
+            }
+            holds.append(h)
+
+    for h in holds:
+        if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
+            try:
+                wx = float(h["x_cord"])
+                wy = float(h["y_cord"])
+            except ValueError:
+                continue
+            size = h.get("size", "Small").lower()
+            if size == "large":
+                castle_img = large_castle_image
+            elif size == "medium":
+                castle_img = medium_castle_image
+            else:
+                castle_img = small_castle_image
+            sprite = pyglet.sprite.Sprite(castle_img, x=0, y=0)
+            sprite.scale = 0.5
+            house = h.get("house", "")
+            sprite.color = house_colors.get(house, (255, 255, 255)) 
+            hold_markers.append({
+                "world": (wx, wy),
+                "sprite": sprite,
+                "data": h,
+                "size": size
+            })
+
+def draw_line(x1, y1, x2, y2, width=2, color=(200, 50, 50), opacity=255):
     batch = pyglet.graphics.Batch()
-    poly = pyglet.shapes.Polygon(*coords, color=(50, 200, 100), batch=batch)
-    poly.opacity = 128
+    line = pyglet.shapes.Line(x1, y1, x2, y2, width, color=color, batch=batch)
+    line.opacity = opacity
     batch.draw()
+    
+def show_borders():
+    hold_lookup = {h["name"]: (float(h["x_cord"]), float(h["y_cord"])) for h in holds}
+    borders_lookup = {h["name"]: set(h.get("borders", "").split("|")) for h in holds}
+
+    for hold in holds:
+        name = hold["name"]
+        wx1, wy1 = hold_lookup[name]
+
+        for border_region in borders_lookup[name]:
+            border_region = border_region.strip()
+            if border_region not in hold_lookup:
+                continue
+
+            wx2, wy2 = hold_lookup[border_region]
+            if name in borders_lookup.get(border_region, set()):
+                color = (50, 200, 50)
+            else:
+                color = (200, 50, 50)
+
+            sx1, sy1 = world_to_screen(wx1, wy1)
+            sx2, sy2 = world_to_screen(wx2, wy2)
+            draw_line(sx1, sy1, sx2, sy2, color=color)
 
 @window.event
 def on_draw():
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
+
     for m in hold_markers:
         sx, sy = world_to_screen(*m["world"])
-    
         if m["size"] == "large":
             m["sprite"].scale = zoom * 0.125
             m["sprite"].x = sx - 50
@@ -144,8 +175,7 @@ def on_draw():
             m["sprite"].y = sy - 30
         m["sprite"].draw()
 
-    coords = [(100, 100), (200, 80), (300, 150), (260, 260), (120, 220)]
-    draw_polygon(coords)
+    show_borders()
 
     debug_text = ''
     for var_name in debug_vars:
@@ -192,5 +222,10 @@ def update(dt):
     camera_x = max(0.0, min(camera_x, background.width - window.width))
     camera_y = max(0.0, min(camera_y, background.height - window.height))
 
+# initial load
+load_holds()
+
+# update every N seconds
+pyglet.clock.schedule_interval(load_holds, CSV_REFRESH_INTERVAL)
 pyglet.clock.schedule_interval(update, 1/120.0)
 pyglet.app.run()
