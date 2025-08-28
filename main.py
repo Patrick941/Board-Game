@@ -115,6 +115,12 @@ for h in holds:
             "data": h,
             "size": size
         })
+        
+def draw_polygon(coords):
+    batch = pyglet.graphics.Batch()
+    poly = pyglet.shapes.Polygon(*coords, color=(50, 200, 100), batch=batch)
+    poly.opacity = 128
+    batch.draw()
 
 @window.event
 def on_draw():
@@ -137,6 +143,9 @@ def on_draw():
             m["sprite"].x = sx - 30
             m["sprite"].y = sy - 30
         m["sprite"].draw()
+
+    coords = [(100, 100), (200, 80), (300, 150), (260, 260), (120, 220)]
+    draw_polygon(coords)
 
     debug_text = ''
     for var_name in debug_vars:
