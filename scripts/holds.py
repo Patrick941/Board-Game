@@ -59,7 +59,8 @@ def load_holds(dt=None):
                 "defense_rating": row.get("defense_rating", "0"),
                 "size": row.get("size", "Small"),
                 "house": house_name,
-                "borders": row.get("borders", "..")
+                "borders": row.get("borders", ".."),
+                "resources": row.get("resources", ".")
             }
             holds.append(h)
 
