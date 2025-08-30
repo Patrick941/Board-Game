@@ -156,7 +156,7 @@ def on_draw():
     debug_label.draw()
     
     if scoreboard_pressed:
-        scoreboard.open_scoreboard(holds.holds, holds.house_region, window.width, window.height, font_name)
+        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name)
         
     if scoreboard_pressed:
         selected_hold = None

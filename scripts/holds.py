@@ -28,22 +28,27 @@ medium_castle_image = pyglet.image.load(os.path.join(images_dir, 'Medium_Castle_
 large_castle_image = pyglet.image.load(os.path.join(images_dir, 'Large_Castle_Icon.png'))
 
 house_colours = {
-    "Tyrell": [(150, 255, 150),(150, 255, 150)],
-    "Stark": [(200, 200, 200),(200, 200, 200)],
-    "Arryn": [(173, 216, 255),(173, 216, 255)],
-    "Tully": [(186, 85, 216),(186, 85, 216)],
-    "Baratheon": [(255, 255, 100),(255, 255, 100)],
-    "Martell": [(255, 165, 50),(255, 165, 50)],
-    "Lannister": [(255, 70, 70),(255, 70, 70)],
-    "Greyjoy": [(50, 160, 160),(50, 160, 160)],
-    "Targaryen": [(100, 100, 100),(100, 100, 100)]
+    "Tyrell": [(150, 255, 150),(150, 255, 150), (0, 0, 0, 0)],
+    "Stark": [(200, 200, 200),(240, 240, 240), (0, 0, 0, 0)],
+    "Arryn": [(173, 150, 255),(173, 216, 255), (0, 0, 0, 0)],
+    "Tully": [(170, 85, 230),(230, 85, 170), (0, 0, 0, 0)],
+    "Baratheon": [(255, 255, 100),(255, 255, 100), (0, 0, 0, 0)],
+    "Martell": [(255, 165, 50),(255, 165, 50), (0, 0, 0, 0)],
+    "Lannister": [(255, 70, 70),(255, 70, 70), (0, 0, 0, 0)],
+    "Greyjoy": [(50, 160, 160),(50, 160, 160), (0, 0, 0, 0)],
+    "Targaryen": [(100, 100, 100),(00, 00, 00), (0, 0, 0, 0)]
 }
+
+def reset_resources():
+    for house_idx, (house,colours) in enumerate(house_colours.items()):
+        house_colours[house][2] = (0, 0, 0, 0)
 
 def load_holds(dt=None):
     global holds, hold_markers
     holds = []
     hold_markers = []
 
+    reset_resources()
     csv_path = os.path.join(data_dir, 'holds.csv')
     with open(csv_path, newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
@@ -68,6 +73,11 @@ def load_holds(dt=None):
                 "gold": resources[3]
             }
             holds.append(h)
+
+            for i, resource in enumerate(resources):
+                colour_list = list(house_colours[house_name][2])
+                colour_list[i] += int(resource)
+                house_colours[house_name][2] = tuple(colour_list)
 
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
@@ -116,7 +126,7 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
         else:
             y_offset = 30
 
-        colour = house_colours[house][0]
+        colour = house_colours[house][1]
 
         label = pyglet.text.Label(
             name,
@@ -126,6 +136,6 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
             y=sy + y_offset,
             anchor_x='center',
             anchor_y='bottom',
-            color=(colour[0], colour[1], colour[2], 255)
+            color=colour
         )
         label.draw()
