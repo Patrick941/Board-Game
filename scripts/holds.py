@@ -16,7 +16,7 @@ house_region = {
     "Martell": "Dorne",
     "Lannister": "The Westerlands",
     "Greyjoy": "The Iron Islands",
-    "NA": "The Crownlands"
+    "Targaryen": "The Crownlands"
 }
 
 holds = []
@@ -28,15 +28,15 @@ medium_castle_image = pyglet.image.load(os.path.join(images_dir, 'Medium_Castle_
 large_castle_image = pyglet.image.load(os.path.join(images_dir, 'Large_Castle_Icon.png'))
 
 house_colours = {
-    "Tyrell": (150, 255, 150),
-    "Stark": (200, 200, 200),
-    "Arryn": (173, 216, 255),
-    "Tully": (186, 85, 216),
-    "Baratheon": (255, 255, 100),
-    "Martell": (255, 165, 50),
-    "Lannister": (255, 70, 70),
-    "Greyjoy": (50, 160, 160),
-    "NA": (128, 0, 128)
+    "Tyrell": [(150, 255, 150),(150, 255, 150)],
+    "Stark": [(200, 200, 200),(200, 200, 200)],
+    "Arryn": [(173, 216, 255),(173, 216, 255)],
+    "Tully": [(186, 85, 216),(186, 85, 216)],
+    "Baratheon": [(255, 255, 100),(255, 255, 100)],
+    "Martell": [(255, 165, 50),(255, 165, 50)],
+    "Lannister": [(255, 70, 70),(255, 70, 70)],
+    "Greyjoy": [(50, 160, 160),(50, 160, 160)],
+    "Targaryen": [(100, 100, 100),(100, 100, 100)]
 }
 
 def load_holds(dt=None):
@@ -50,6 +50,8 @@ def load_holds(dt=None):
         for row in reader:
             region_name = row.get("region", "")
             house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
+            resources_string = row.get("resources")
+            resources = resources_string.split("|")
             
             h = {
                 "name": row.get("name", ""),
@@ -60,7 +62,10 @@ def load_holds(dt=None):
                 "size": row.get("size", "Small"),
                 "house": house_name,
                 "borders": row.get("borders", ".."),
-                "resources": row.get("resources", ".")
+                "food": resources[0],
+                "wood": resources[1],
+                "iron":resources[2],
+                "gold": resources[3]
             }
             holds.append(h)
 
@@ -81,7 +86,7 @@ def load_holds(dt=None):
             sprite = pyglet.sprite.Sprite(castle_img, x=0, y=0)
             sprite.scale = 0.5
             house = h.get("house", "")
-            sprite.color = house_colours.get(house, (255, 255, 255)) 
+            sprite.color = house_colours[house][0]
             hold_markers.append({
                 "world": (wx, wy),
                 "sprite": sprite,
@@ -111,7 +116,7 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
         else:
             y_offset = 30
 
-        colour = house_colours.get(house, (255, 255, 255))
+        colour = house_colours[house][0]
 
         label = pyglet.text.Label(
             name,

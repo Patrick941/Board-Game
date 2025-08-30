@@ -1,7 +1,8 @@
 import pyglet
+from pyglet.window import key
 import math
 import os
-from scripts import holds, menu
+from scripts import holds, menu, scoreboard
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -35,6 +36,7 @@ dragging = False
 last_mouse_x, last_mouse_y = 0, 0
 scroll_dx = 0.0
 scroll_dy = 0.0
+scoreboard_pressed = False
 
 CSV_REFRESH_INTERVAL = 5.0
 
@@ -115,6 +117,7 @@ def show_borders(selected_name=None):
 
 @window.event
 def on_draw():
+    global scoreboard_pressed, selected_hold
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
@@ -151,6 +154,12 @@ def on_draw():
         debug_text += f'{var_name}: {value}\n'
     debug_label.text = debug_text
     debug_label.draw()
+    
+    if scoreboard_pressed:
+        scoreboard.open_scoreboard(holds.holds, holds.house_region, window.width, window.height, font_name)
+        
+    if scoreboard_pressed:
+        selected_hold = None
 
 @window.event
 def on_mouse_scroll(x, y, scroll_x, scroll_y):
@@ -179,8 +188,10 @@ def on_mouse_press(x, y, button, modifiers):
     if clicked_hold:
         selected_hold = clicked_hold
         return
+    else:
+        selected_hold = None
   
-    if selected_hold:
+    if selected_hold != None:
         menu_width = 300
         x0, y0, w, h = 10, window.height - menu.menu_height - 10, menu_width, menu.menu_height
         if menu.is_point_inside(x, y, (x0, y0, w, h)):
@@ -211,6 +222,12 @@ def update(dt):
     camera_x += dx; camera_y += dy
     camera_x = max(0.0, min(camera_x, background.width - window.width))
     camera_y = max(0.0, min(camera_y, background.height - window.height))
+    
+@window.event
+def on_key_press(symbol, modifiers):
+    global scoreboard_pressed
+    if symbol == key.TAB:
+        scoreboard_pressed = not scoreboard_pressed
 
 holds.load_holds()
 
