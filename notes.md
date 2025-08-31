@@ -12,3 +12,15 @@ Valerian Steel requires dragonfire
 Types of dragons with statistic types
 Research/Magic Tracks?
 Trade Lines
+
+Actions
+
+All Cities
+Train Soldiers
+Improve farms (Based on research tracks)
+Improve mines (Based on research tracks)
+Plant trees
+
+Capital actions
+Call the Banners
+Declare Kingdom

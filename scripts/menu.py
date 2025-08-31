@@ -20,6 +20,29 @@ def is_point_inside(x, y, rect):
     rx, ry, rw, rh = rect
     return rx <= x <= rx + rw and ry <= y <= ry + rh
 
+all_city_buttons = ["Train Soldiers", "Upgrade Units", "Improve Farms", "Plant Forests", "Improve Iron Mines", "Improve Gold Mines"]
+capital_buttons = ["Call Banners", "Declare Kingdom"]
+
+def draw_menu_button(text, x, y, height, width, font_name):
+    colour = (int(menu_bg_color[0] * 0.8), int(menu_bg_color[1] * 0.8), int(menu_bg_color[2] * 0.8))
+    pyglet.shapes.RoundedRectangle(
+        x, y, width, height,
+        color=colour,
+        batch=None,
+        radius=25
+    ).draw()
+    
+    pyglet.text.Label(
+        text,
+        font_name=font_name,
+        font_size=50,
+        x=x + width // 2,
+        y=y + height // 2,
+        anchor_x='center',
+        anchor_y='center',
+        color=(0, 0, 0, 255)
+    ).draw()
+
 def draw_menu(selected_hold, window_width, window_height, font_name, side):
     if not selected_hold:
         return
@@ -93,3 +116,21 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side):
         sprite.x = icon_x
         sprite.y = icon_y
         sprite.draw()
+        
+    button_idx = 0
+    button_padding = 15
+    button_width = menu_width * 0.7
+    x = menu_x + (button_width / 2)
+    if selected_hold == "Large":
+        button_count = len(all_city_buttons) + len(capital_buttons)
+        button_height = menu_height * 0.05
+        for button in capital_buttons:
+            y = menu_y + menu_height - icon_y - icon_padding - (button_padding * (button_idx + 1)) - (button_idx * button_height)
+            draw_menu_button(button, x, y, button_height, button_width, font_name)
+    else:
+        button_count = len(all_city_buttons)
+        button_height = menu_height * 0.05
+    
+    for button in all_city_buttons:
+        y = menu_y + menu_height - icon_y - icon_padding - (button_padding * (button_idx + 1)) - (button_idx * button_height)
+        draw_menu_button(button, x, y, button_height, button_width, font_name)
