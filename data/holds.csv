@@ -49,17 +49,17 @@ Stoney Sept,The Riverlands,1112,1381,0,Medium,King's Landing|Riverspring|Hornval
 Harrenhall,The Riverlands,1360,1534,0,Medium,Acorn Hall|Maidenpool|Antlers|Saltpans,3|2|0|0
 Maidenpool,The Riverlands,1632,1476,0,Medium,Rook's Rest|Antlers|Harrenhall,2|1|0|0
 Crakehall,The Westerlands,482,1053,0,Small,Red Lake|Old Oak|Casterly Rock,1|2|0|0
-Silverhill,The Westerlands,848,1086,0,Medium,Starsfield|Casterly Rock|Goldengrove,1|0|1|1
+Silverhill,The Westerlands,848,1086,0,Medium,Starsfield|Casterly Rock|Goldengrove,1|0|1|2
 Starsfield,The Westerlands,743,1347,0,Small,Golden Tooth|Deep Den|Casterly Rock|Silverhill,1|1|1|0
 Deep Den,The Westerlands,885,1347,0,Small,Golden Tooth|Starsfield|Hornvale|Riverspring,2|1|0|0
-Hornvale,The Westerlands,976,1412,0,Small,Golden Tooth| Deep Den|Riverspring|Pinkmaiden|Stoney Sep,2|0|0|1
+Hornvale,The Westerlands,976,1412,0,Small,Golden Tooth| Deep Den|Riverspring|Pinkmaiden|Stoney Sep,2|0|0|2
 Golden Tooth,The Westerlands,823,1416,0,Medium,Ashemark|Starsfield|Deep Den|Hornvale,1|0|0|2
-Ashemark,The Westerlands,801,1518,0,Medium,The Crag|Golden Tooth|Riverrun,1|0|1|1
-The Crag,The Westerlands,681,1604,0,Medium,Banefort|Faircastle|Ashemark,1|0|1|1
+Ashemark,The Westerlands,801,1518,0,Medium,The Crag|Golden Tooth|Riverrun,1|0|1|2
+The Crag,The Westerlands,681,1604,0,Medium,Banefort|Faircastle|Ashemark,1|0|1|2
 Banefort,The Westerlands,684,1688,0,Small,The Crag|Pyke|Raventree Hall,1|1|1|0
 Faircastle,The Westerlands,552,1476,0,Medium ,Feastfires|The Crag,1|1|1|0
 Feastfires,The Westerlands,434,1327,0,Medium,Faircastle,2|1|0|0
-Riverspring,The Westerlands,1045,1323,0,Small,Stoney Sept|Hornvale|Deep Den,1|0|1|1
+Riverspring,The Westerlands,1045,1323,0,Small,Stoney Sept|Hornvale|Deep Den,1|0|1|2
 Dyre Den,The Crownlands,1927,1547,0,Small,Rook's Rest,1|1|1|0
 Antlers,The Crownlands,1513,1417,0,Small,Maidenpool|Duskendale|Harrenhall|King's Landing,1|1|1|0
 Rook's Rest,The Crownlands,1780,1419,0,Medium,Maidenpool|Dyre Den|Duskendale|Dragonstone,2|0|1|0

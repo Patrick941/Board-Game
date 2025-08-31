@@ -175,8 +175,11 @@ def on_mouse_press(x, y, button, modifiers):
             break
 
     if clicked_hold:
-        selected_hold = clicked_hold
-        return
+        if clicked_hold["house"] == player_house:
+            selected_hold = clicked_hold
+            return
+        else:
+            selected_hold = None
     else:
         selected_hold = None
   
