@@ -43,7 +43,7 @@ def reset_resources():
     for house_idx, (house,colours) in enumerate(house_colours.items()):
         house_colours[house][2] = (0, 0, 0, 0)
 
-def load_holds(dt=None):
+def load_holds(turn_counter):
     global holds, hold_markers
     holds = []
     hold_markers = []
@@ -85,8 +85,6 @@ def load_holds(dt=None):
                 increase_list = list(house_colours[house][2])
                 total_list[i] += increase_list[i]
                 house_colours[house][3] = tuple(total_list)
-                breakpoint
-
 
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):

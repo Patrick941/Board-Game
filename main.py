@@ -53,7 +53,7 @@ debug_label = pyglet.text.Label(
 )
 
 selected_hold = None
-turn_counter = [0]  # pass-by-reference counter
+turn_counter = [1]
 
 
 def screen_to_world(sx, sy):
@@ -188,8 +188,16 @@ def on_mouse_press(x, y, button, modifiers):
     
     selected_hold = None
 
-    # let turn control handle button clicks (increments turn counter)
+    last_turn = turn_counter[0]
     turn_control.handle_mouse_press(x, y, button, modifiers, turn_counter)
+    new_turn = turn_counter[0]
+    if new_turn == last_turn:
+        pass
+    elif new_turn == last_turn + 1:
+        holds.load_holds(turn_counter)
+    else:
+        print("ERROR turn counter mishandled, exiting")
+        exit(2)
 
 @window.event
 def on_mouse_release(x, y, button, modifiers):
@@ -221,9 +229,9 @@ def on_key_press(symbol, modifiers):
     if symbol == key.TAB:
         scoreboard_pressed = not scoreboard_pressed
 
-holds.load_holds()
+holds.load_holds(turn_counter)
 
 if CSV_REFRESH_INTERVAL != -1:
-    pyglet.clock.schedule_interval(holds.load_holds, CSV_REFRESH_INTERVAL)
+    pyglet.clock.schedule_interval(holds.load_holds(turn_counter), CSV_REFRESH_INTERVAL)
 pyglet.clock.schedule_interval(update, 1/120.0)
 pyglet.app.run()
