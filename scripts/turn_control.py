@@ -42,9 +42,24 @@ def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, hous
     icons_width = 400
     icons_x_base = x_base + window_width * 0.05
     icon_size = 35
+    padding = 10
     
     for i, (name, sprite_image) in enumerate(icons.items()):
         icon_x = icons_x_base + (icons_width / (2 * len(icons))) + (i * (icons_width / len(icons))) - (icon_size / 2)
+        text_x = icon_x - icon_size - padding
+        text_string = str(house_colours[player_house][3][i])
+        
+        pyglet.text.Label(
+            text_string,
+            font_name=font_name,
+            font_size=20,
+            x=text_x,
+            y=window_height - bar_height // 2,
+            anchor_x="left",
+            anchor_y="center",
+            color=(0, 0, 0, 255)
+        ).draw()
+        
         
         sprite = pyglet.sprite.Sprite(sprite_image)
         scale = icon_size / max(sprite.image.width, sprite.image.height)
