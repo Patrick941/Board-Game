@@ -38,7 +38,7 @@ scroll_dx = 0.0
 scroll_dy = 0.0
 scoreboard_pressed = False
 
-CSV_REFRESH_INTERVAL = 5.0
+CSV_REFRESH_INTERVAL = -1
 
 debug_label = pyglet.text.Label(
     '', 
@@ -231,6 +231,7 @@ def on_key_press(symbol, modifiers):
 
 holds.load_holds()
 
-pyglet.clock.schedule_interval(holds.load_holds, CSV_REFRESH_INTERVAL)
+if CSV_REFRESH_INTERVAL != -1:
+    pyglet.clock.schedule_interval(holds.load_holds, CSV_REFRESH_INTERVAL)
 pyglet.clock.schedule_interval(update, 1/120.0)
 pyglet.app.run()

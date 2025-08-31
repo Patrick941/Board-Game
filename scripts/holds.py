@@ -28,15 +28,15 @@ medium_castle_image = pyglet.image.load(os.path.join(images_dir, 'Medium_Castle_
 large_castle_image = pyglet.image.load(os.path.join(images_dir, 'Large_Castle_Icon.png'))
 
 house_colours = {
-    "Tyrell": [(150, 255, 150),(150, 255, 150), (0, 0, 0, 0)],
-    "Stark": [(200, 200, 200),(240, 240, 240), (0, 0, 0, 0)],
-    "Arryn": [(173, 150, 255),(173, 216, 255), (0, 0, 0, 0)],
-    "Tully": [(170, 85, 230),(230, 85, 170), (0, 0, 0, 0)],
-    "Baratheon": [(255, 255, 100),(255, 255, 100), (0, 0, 0, 0)],
-    "Martell": [(255, 165, 50),(255, 165, 50), (0, 0, 0, 0)],
-    "Lannister": [(255, 70, 70),(255, 70, 70), (0, 0, 0, 0)],
-    "Greyjoy": [(50, 160, 160),(50, 160, 160), (0, 0, 0, 0)],
-    "Targaryen": [(100, 100, 100),(00, 00, 00), (0, 0, 0, 0)]
+    "Tyrell": [(150, 255, 150),(150, 255, 150), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Stark": [(200, 200, 200),(240, 240, 240), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Arryn": [(173, 150, 255),(173, 216, 255), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Tully": [(170, 85, 230),(230, 85, 170), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Baratheon": [(255, 255, 100),(255, 255, 100), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Martell": [(255, 165, 50),(255, 165, 50), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Lannister": [(255, 70, 70),(255, 70, 70), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Greyjoy": [(50, 160, 160),(50, 160, 160), (0, 0, 0, 0), (0, 0, 0, 0)],
+    "Targaryen": [(100, 100, 100),(00, 00, 00), (0, 0, 0, 0), (0, 0, 0, 0)]
 }
 
 def reset_resources():
@@ -75,9 +75,18 @@ def load_holds(dt=None):
             holds.append(h)
 
             for i, resource in enumerate(resources):
-                colour_list = list(house_colours[house_name][2])
-                colour_list[i] += int(resource)
-                house_colours[house_name][2] = tuple(colour_list)
+                increase_list = list(house_colours[house_name][2])
+                increase_list[i] += int(resource)
+                house_colours[house_name][2] = tuple(increase_list)
+                
+        for house, colours in house_colours.items():
+            for i, resource in enumerate(resources):
+                total_list = list(house_colours[house][3])
+                increase_list = list(house_colours[house][2])
+                total_list[i] += increase_list[i]
+                house_colours[house][3] = tuple(total_list)
+                breakpoint
+
 
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
