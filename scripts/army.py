@@ -14,17 +14,19 @@ def army_init():
             path = os.path.join(army_dir, filename)
             army_images[image_name] = pyglet.image.load(path)
 
-def show_units(house_region, holds, window_width, window_height):
-    for hold in holds:
-        house = hold["house"]
-        image_name = house + "_soldier"
-        sprite_image = army_images[image_name.lower()]
-        
-        icon_size = 100
-        sprite = pyglet.sprite.Sprite(sprite_image)
-        scale = icon_size / max(sprite.image.width, sprite.image.height)
-        sprite.scale = scale
-        sprite.x = int(hold["x_cord"])
-        sprite.y = int(hold["y_cord"])
-        sprite.draw()
-        
+def show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom):
+    house = hold["house"]
+    image_name = house + "_soldier"
+    sprite_image = army_images[image_name.lower()]
+    
+    icon_size = 150
+    sprite = pyglet.sprite.Sprite(sprite_image)
+    scale = icon_size / max(sprite.image.width, sprite.image.height)
+    sprite.scale = scale
+
+    sprite.x = ((int(hold["x_cord"]) - camera_x) * zoom) - (icon_size / 2)
+    sprite.y = (int(hold["y_cord"]) - camera_y) * zoom
+
+    sprite.scale *= zoom
+
+    sprite.draw()

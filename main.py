@@ -17,7 +17,7 @@ background = pyglet.sprite.Sprite(background_image, x=0.0, y=0.0)
 arrow_image = pyglet.image.load(os.path.join(images_dir, 'arrow_out.png'))
 arrow = pyglet.sprite.Sprite(arrow_image)
 
-player_house = "Tyrell"
+player_house = "Tully"
 
 camera_x = 0.0
 camera_y = 0.0
@@ -26,6 +26,8 @@ zoom = 1
 min_zoom = 0.465
 max_zoom = 3.0
 font_name = "Edwardian Script ITC"
+mouse_x = 0
+mouse_y = 0
 
 last_click = (0.0, 0.0)
 
@@ -100,10 +102,16 @@ def show_borders(selected_name=None):
             sx1, sy1 = world_to_screen(wx1, wy1)
             sx2, sy2 = world_to_screen(wx2, wy2)
             draw_line(sx1, sy1, sx2, sy2)
+            
+@window.event
+def on_mouse_motion(x, y, dx, dy):
+    global mouse_x, mouse_y
+    mouse_x = x
+    mouse_y = y
 
 @window.event
 def on_draw():
-    global scoreboard_pressed, selected_hold
+    global scoreboard_pressed, selected_hold, mouse_y, mouse_x
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
@@ -125,8 +133,6 @@ def on_draw():
         m["sprite"].draw()
         
     holds.show_titles(holds.holds, world_to_screen, zoom, font_name, holds.house_colours)
-    
-    army.show_units(holds.house_region, holds.holds, window.width, window.height)
 
     debug_text = ''
     for var_name in debug_vars:
@@ -141,7 +147,7 @@ def on_draw():
         turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.house_colours, player_house)
     
     if scoreboard_pressed:
-        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name)
+        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name, 50)
         return
     
     if selected_hold is not None:
@@ -150,7 +156,7 @@ def on_draw():
             menu.draw_menu(selected_hold, window.width, window.height, font_name, "right")
         else:
             menu.draw_menu(selected_hold, window.width, window.height, font_name, "left")
-        return
+    holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
 @window.event
 def on_mouse_scroll(x, y, scroll_x, scroll_y):

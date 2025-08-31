@@ -19,7 +19,6 @@ icons = {
     "gold": pyglet.image.load(os.path.join(images_dir, 'Gold.png'))
 }
 
-
 def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, house_colours, player_house):
     pyglet.shapes.Rectangle(
         0, window_height - bar_height,

@@ -1,11 +1,20 @@
 import pyglet
 import csv
 import os
+from scripts import army
+from pyglet import shapes
 
-# Get the directory of this file to handle relative paths correctly
 current_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(current_dir, '..', 'Images')
 data_dir = os.path.join(current_dir, '..', 'data')
+menu_bg_color = (228, 213, 183)
+
+icons = {
+    "food": pyglet.image.load(os.path.join(images_dir, 'Food.png')),
+    "wood": pyglet.image.load(os.path.join(images_dir, 'Wood.png')),
+    "iron": pyglet.image.load(os.path.join(images_dir, 'Iron.png')),
+    "gold": pyglet.image.load(os.path.join(images_dir, 'Gold.png'))
+}
 
 house_region = {
     "Tyrell": "The Reach",
@@ -57,6 +66,19 @@ def load_holds(turn_counter):
             house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
             resources_string = row.get("resources")
             resources = resources_string.split("|")
+            size = row.get("size", "Small")
+            if size == "Small":
+                multiplier = 1
+            elif size == "Medium":
+                multiplier = 2
+            elif size == "Large":
+                multiplier = 4
+            else:
+                print("ERROR invalid castle size, exiting")
+                exit(2)
+                
+            for i, resource in enumerate(resources):
+                resources[i] = str(int(resources[i]) * multiplier)
             
             h = {
                 "name": row.get("name", ""),
@@ -64,7 +86,7 @@ def load_holds(turn_counter):
                 "x_cord": row.get("x_cord", "0"),
                 "y_cord": row.get("y_cord", "0"),
                 "defense_rating": row.get("defense_rating", "0"),
-                "size": row.get("size", "Small"),
+                "size": size,
                 "house": house_name,
                 "borders": row.get("borders", ".."),
                 "food": resources[0],
@@ -146,3 +168,54 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
             color=colour
         )
         label.draw()
+        
+def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_x, mouse_y, tolerance, font_name):
+    for hold in holds:
+        x = int(hold["x_cord"])
+        y = int(hold["y_cord"])
+        dx = mouse_x - x
+        dy = mouse_y - y
+        distance = (dx**2 + dy**2)**0.5
+        if (distance < tolerance):
+            army.show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom)
+            
+            
+            icon_size = 40
+            icons_width = icon_size * 8
+            bg_width = icons_width + (icon_size / 2)
+            bg_height = 50
+            bg_x = x - (bg_width / 2)
+            bg_y = y - (bg_height) - 5
+
+            background_rect = shapes.RoundedRectangle(
+                x=bg_x - (icon_size / 2), 
+                y=bg_y, 
+                width=bg_width, 
+                height=bg_height, 
+                color=menu_bg_color,
+                radius=20
+            )
+            background_rect.draw()
+
+            for i, (name, sprite_image) in enumerate(icons.items()):
+                icon_x = x - (icons_width / 2) + (icons_width / (2 * len(icons))) + (i * (icons_width / len(icons))) - (icon_size / 2)
+                text_x = icon_x - icon_size
+                text_string = hold[name]
+                
+                sprite = pyglet.sprite.Sprite(sprite_image)
+                scale = icon_size / max(sprite.image.width, sprite.image.height)
+                sprite.scale = scale
+                sprite.x = icon_x
+                sprite.y = y - 50
+                sprite.draw()
+                
+                pyglet.text.Label(
+                    text_string,
+                    font_name=font_name,
+                    font_size=30,
+                    x=text_x,
+                    y=y - 50,
+                    anchor_x="left",
+                    anchor_y="bottom",
+                    color=house_colours[hold["house"]][1]
+                ).draw()

@@ -1,13 +1,13 @@
 name,region,x_cord,y_cord,defense_rating,size,borders,resources
-Highgarden,The Reach,835,713,0,Large,Horn Hill|Cider Hall|Lord Hewett's Town|Goldengrove,9|6|4|4
-Winterfell,The North,1205,2838,0,Large,Deepwood Motte|The Dreadfort|Castle Cerwyn|Torrhen's Square,4|8|4|2
-Sunspear,Dorne,1923,203,0,Large,Ghost Hill|Godsgrace|Lemonwood,3|3|5|5
-Storm's End,The Stormlands,1755,843,0,Large,Felwood|Bronzegate|Evenfall Hall|Rain House,4|4|8|2
-Casterly Rock,The Westerlands,596,1310,0,Large,Silverhill|Crakehall|Starsfield,3|2|4|9
-King's Landing,The Crownlands,1501,1192,0,Large,Stoney Sept|Tumbleton|Rosby|Antlers,6|6|6|1
-Riverrun,The Riverlands,1022,1583,0,Large,Acorn Hall|Ashemark|Pinkmaiden|Raventree Hall,6|4|4|3
-The Eyrie,The Vale,1675,1820,0,Large,Ironoaks|Heart's Home,2|2|7|5
-Pyke,The Iron Islands,601,1756,0,Large,Hammerhorn|Ten Towers|Banefort,3|3|3|6
+Highgarden,The Reach,835,713,0,Large,Horn Hill|Cider Hall|Lord Hewett's Town|Goldengrove,4|3|1|1
+Winterfell,The North,1205,2838,0,Large,Deepwood Motte|The Dreadfort|Castle Cerwyn|Torrhen's Square,2|3|2|1
+Sunspear,Dorne,1923,203,0,Large,Ghost Hill|Godsgrace|Lemonwood,2|2|3|3
+Storm's End,The Stormlands,1755,843,0,Large,Felwood|Bronzegate|Evenfall Hall|Rain House,2|2|4|1
+Casterly Rock,The Westerlands,596,1310,0,Large,Silverhill|Crakehall|Starsfield,2|1|3|5
+King's Landing,The Crownlands,1501,1192,0,Large,Stoney Sept|Tumbleton|Rosby|Antlers,3|3|3|1
+Riverrun,The Riverlands,1022,1583,0,Large,Acorn Hall|Ashemark|Pinkmaiden|Raventree Hall,3|2|2|3
+The Eyrie,The Vale,1675,1820,0,Large,Ironoaks|Heart's Home,1|1|4|3
+Pyke,The Iron Islands,601,1756,0,Large,Hammerhorn|Ten Towers|Banefort,2|2|2|3
 Last Hearth,The North,1524,3240,0,Medium,Karhold|The Dreadfort,2|2|0|0
 Karhold,The North,1860,3130,0,Medium,Last Hearth|The Dreadfort,2|1|0|0
 The Dreadfort,The North,1633,2922,0,Medium,Karhold|Last Hearth|Winterfell|Hornwood,2|1|0|0
@@ -57,7 +57,7 @@ Golden Tooth,The Westerlands,823,1416,0,Medium,Ashemark|Starsfield|Deep Den|Horn
 Ashemark,The Westerlands,801,1518,0,Medium,The Crag|Golden Tooth|Riverrun,1|0|1|2
 The Crag,The Westerlands,681,1604,0,Medium,Banefort|Faircastle|Ashemark,1|0|1|2
 Banefort,The Westerlands,684,1688,0,Small,The Crag|Pyke|Raventree Hall,1|1|1|0
-Faircastle,The Westerlands,552,1476,0,Medium ,Feastfires|The Crag,1|1|1|0
+Faircastle,The Westerlands,552,1476,0,Medium,Feastfires|The Crag,1|1|1|0
 Feastfires,The Westerlands,434,1327,0,Medium,Faircastle,2|1|0|0
 Riverspring,The Westerlands,1045,1323,0,Small,Stoney Sept|Hornvale|Deep Den,1|0|1|2
 Dyre Den,The Crownlands,1927,1547,0,Small,Rook's Rest,1|1|1|0
