@@ -12,5 +12,3 @@ Valerian Steel requires dragonfire
 Types of dragons with statistic types
 Research/Magic Tracks?
 Trade Lines
-
-city viewing when not owned

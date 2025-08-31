@@ -147,7 +147,7 @@ def on_draw():
         turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.house_colours, player_house)
     
     if scoreboard_pressed:
-        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name, 50)
+        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name)
         return
     
     if selected_hold is not None:

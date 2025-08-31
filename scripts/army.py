@@ -13,20 +13,34 @@ def army_init():
             image_name = filename.replace(".png", "")
             path = os.path.join(army_dir, filename)
             army_images[image_name] = pyglet.image.load(path)
+            
+unit_types = ["_soldier", "_archer", "_knight", "_kingsguard"]
 
 def show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom):
     house = hold["house"]
-    image_name = house + "_soldier"
-    sprite_image = army_images[image_name.lower()]
-    
-    icon_size = 150
-    sprite = pyglet.sprite.Sprite(sprite_image)
-    scale = icon_size / max(sprite.image.width, sprite.image.height)
-    sprite.scale = scale
+    units = hold["army"]
+    total_army = 0
+    for unit in units:
+        total_army += int(unit)
+    icon_size = 150    
+    compactor = 0.4
+    unit_count = 0
 
-    sprite.x = ((int(hold["x_cord"]) - camera_x) * zoom) - (icon_size / 2)
-    sprite.y = (int(hold["y_cord"]) - camera_y) * zoom
+    for i, unit in enumerate(units):
+        image_name = house + unit_types[i]
+        y = (int(hold["y_cord"]) - camera_y) * zoom + (icon_size * i * 2.2 * compactor)
+        for idx in range(int(units[i])):
+            x = ((int(hold["x_cord"]) - camera_x) * zoom) - (0.5 * compactor * int(unit) * icon_size) - (icon_size * compactor) + (compactor * icon_size * idx)
+            
+            sprite_image = army_images[image_name.lower()]
+            
+            sprite = pyglet.sprite.Sprite(sprite_image)
+            scale = icon_size / max(sprite.image.width, sprite.image.height)
+            sprite.scale = scale
 
-    sprite.scale *= zoom
+            sprite.x = x
+            sprite.y = y
 
-    sprite.draw()
+            sprite.scale *= zoom
+
+            sprite.draw()

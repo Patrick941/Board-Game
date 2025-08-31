@@ -37,7 +37,7 @@ def open_scoreboard(holds, house_colours, window_width, window_height, font_name
             label_y = menu_y + (menu_height * ((house_idx) / (len(house_colours) + 1)) )
             if category == "House": text = ""
             elif category == "Total": text = str(house_colours[house][3][0] + house_colours[house][3][1] + house_colours[house][3][2] + house_colours[house][3][3]) + "/"
-            else:  text = str(house_colours[house][3][cat_idx - 1]) + "/"
+            else:  text = str(house_colours[house][3][cat_idx - 1])  + "/"
             if category == "House": text = house
             elif category == "Total": text += str(house_colours[house][2][0] + house_colours[house][2][1] + house_colours[house][2][2] + house_colours[house][2][3])
             else:  text += str(house_colours[house][2][cat_idx - 1])

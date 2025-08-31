@@ -79,6 +79,9 @@ def load_holds(turn_counter):
                 
             for i, resource in enumerate(resources):
                 resources[i] = str(int(resources[i]) * multiplier)
+                
+            army_string = row.get("army")
+            army = army_string.split("|")
             
             h = {
                 "name": row.get("name", ""),
@@ -92,7 +95,8 @@ def load_holds(turn_counter):
                 "food": resources[0],
                 "wood": resources[1],
                 "iron":resources[2],
-                "gold": resources[3]
+                "gold": resources[3],
+                "army": army
             }
             holds.append(h)
 
@@ -171,8 +175,8 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
         
 def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_x, mouse_y, tolerance, font_name):
     for hold in holds:
-        x = int(hold["x_cord"])
-        y = int(hold["y_cord"])
+        x = (int(hold["x_cord"]) - camera_x) * zoom
+        y = (int(hold["y_cord"]) - camera_y) * zoom
         dx = mouse_x - x
         dy = mouse_y - y
         distance = (dx**2 + dy**2)**0.5
