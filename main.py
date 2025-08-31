@@ -2,7 +2,7 @@ import pyglet
 from pyglet.window import key
 import math
 import os
-from scripts import holds, menu, scoreboard, turn_control
+from scripts import holds, menu, scoreboard, turn_control, army
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -125,6 +125,8 @@ def on_draw():
         m["sprite"].draw()
         
     holds.show_titles(holds.holds, world_to_screen, zoom, font_name, holds.house_colours)
+    
+    army.show_units(holds.house_region, holds.holds, window.width, window.height)
 
     debug_text = ''
     for var_name in debug_vars:
@@ -233,6 +235,7 @@ def on_key_press(symbol, modifiers):
         scoreboard_pressed = not scoreboard_pressed
 
 holds.load_holds(turn_counter)
+army.army_init()
 
 if CSV_REFRESH_INTERVAL != -1:
     pyglet.clock.schedule_interval(holds.load_holds(turn_counter), CSV_REFRESH_INTERVAL)
