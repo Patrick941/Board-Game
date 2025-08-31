@@ -2,22 +2,22 @@ import pyglet
 from pyglet.window import key
 import math
 import os
-from scripts import holds, menu, scoreboard
+from scripts import holds, menu, scoreboard, turn_control
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
 window = pyglet.window.Window(fullscreen=True, caption="Board Game")
 
-# Get the directory of this file to handle relative paths correctly
 current_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(current_dir, 'Images')
 
 background_image = pyglet.image.load(os.path.join(images_dir, "Background_Cleaned.jpg"))
 background = pyglet.sprite.Sprite(background_image, x=0.0, y=0.0)
 
-# Load arrow image
 arrow_image = pyglet.image.load(os.path.join(images_dir, 'arrow_out.png'))
 arrow = pyglet.sprite.Sprite(arrow_image)
+
+player_house = "Tyrell"
 
 camera_x = 0.0
 camera_y = 0.0
@@ -53,6 +53,8 @@ debug_label = pyglet.text.Label(
 )
 
 selected_hold = None
+turn_counter = [0]  # pass-by-reference counter
+
 
 def screen_to_world(sx, sy):
     return (camera_x + sx / zoom, camera_y + sy / zoom)
@@ -66,51 +68,35 @@ def draw_line(x1, y1, x2, y2, width=30, opacity=255):
     length = (dx**2 + dy**2)**0.5
     if length == 0 or arrow.image.width == 0:
         return
-    
-    # Calculate angle
     angle = math.atan2(dy, dx)
-    
-    # Set arrow properties
     arrow.anchor_x = 0
     arrow.anchor_y = arrow.image.height // 2
     arrow.x = x1
     arrow.y = y1
     arrow.rotation = -math.degrees(angle)
-    
-    # Scale the arrow to fit the line length and width
     arrow.scale_x = length / arrow.image.width
     arrow.scale_y = width / arrow.image.height
-    
-    # Set color and opacity
     arrow.opacity = opacity
     arrow.color = (255, 0, 0)
-    
-    # Draw the arrow
     arrow.draw()
 
 def show_borders(selected_name=None):
     hold_lookup = {h["name"]: (float(h["x_cord"]), float(h["y_cord"])) for h in holds.holds}
     borders_lookup = {h["name"]: set(h.get("borders", "").split("|")) for h in holds.holds}
-
     for hold in holds.holds:
         name = hold["name"]
-
         if selected_name and name != selected_name:
             continue
-
         wx1, wy1 = hold_lookup[name]
-
         for border_region in borders_lookup[name]:
             border_region = border_region.strip()
             if border_region not in hold_lookup:
                 continue
-
             wx2, wy2 = hold_lookup[border_region]
             if name in borders_lookup.get(border_region, set()):
                 colour = (50, 200, 50)
             else:
                 colour = (200, 50, 50)
-
             sx1, sy1 = world_to_screen(wx1, wy1)
             sx2, sy2 = world_to_screen(wx2, wy2)
             draw_line(sx1, sy1, sx2, sy2)
@@ -121,9 +107,6 @@ def on_draw():
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
-    
-    if selected_hold != None:
-        show_borders(selected_hold["name"])
     
     for m in holds.hold_markers:
         sx, sy = world_to_screen(*m["world"])
@@ -142,11 +125,6 @@ def on_draw():
         m["sprite"].draw()
         
     holds.show_titles(holds.holds, world_to_screen, zoom, font_name, holds.house_colours)
-    if selected_hold != None:
-        if (int(selected_hold["x_cord"]) < (window.width / 2)):
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "right")
-        else:
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "left")
 
     debug_text = ''
     for var_name in debug_vars:
@@ -155,11 +133,22 @@ def on_draw():
     debug_label.text = debug_text
     debug_label.draw()
     
+    if (not scoreboard_pressed) and (not selected_hold):
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.house_colours, player_house)
+    else:
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.house_colours, player_house)
+    
     if scoreboard_pressed:
         scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name)
-        
-    if scoreboard_pressed:
-        selected_hold = None
+        return
+    
+    if selected_hold is not None:
+        show_borders(selected_hold["name"])
+        if (int(selected_hold["x_cord"]) < (window.width / 2)):
+            menu.draw_menu(selected_hold, window.width, window.height, font_name, "right")
+        else:
+            menu.draw_menu(selected_hold, window.width, window.height, font_name, "left")
+        return
 
 @window.event
 def on_mouse_scroll(x, y, scroll_x, scroll_y):
@@ -191,13 +180,16 @@ def on_mouse_press(x, y, button, modifiers):
     else:
         selected_hold = None
   
-    if selected_hold != None:
+    if selected_hold is not None:
         menu_width = 300
         x0, y0, w, h = 10, window.height - menu.menu_height - 10, menu_width, menu.menu_height
         if menu.is_point_inside(x, y, (x0, y0, w, h)):
             return
     
     selected_hold = None
+
+    # let turn control handle button clicks (increments turn counter)
+    turn_control.handle_mouse_press(x, y, button, modifiers, turn_counter)
 
 @window.event
 def on_mouse_release(x, y, button, modifiers):
