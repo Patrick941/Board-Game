@@ -153,9 +153,9 @@ def on_draw():
     if selected_hold is not None:
         show_borders(selected_hold["name"])
         if (int(selected_hold["x_cord"]) < (window.width / 2)):
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "right")
+            menu.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
         else:
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "left")
+            menu.draw_menu(selected_hold, window.width, window.height, font_name, "left", mouse_x, mouse_y)
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
 @window.event
@@ -173,14 +173,22 @@ def on_mouse_press(x, y, button, modifiers):
     last_click = (round(world_x, 2), round(world_y, 2))
     
     clicked_hold = None
-    for m in holds.hold_markers:
-        sx, sy = world_to_screen(*m["world"])
-        sprite = m["sprite"]
-        sx1, sy1 = sprite.x, sprite.y
-        sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
-        if sx1 <= x <= sx2 and sy1 <= y <= sy2:
-            clicked_hold = m["data"]
-            break
+    if selected_hold:
+        if (int(selected_hold["x_cord"]) < (window.width / 2)):
+            if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")):
+                clicked_hold = selected_hold
+            elif menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")):
+                clicked_hold = selected_hold
+    
+    if not clicked_hold:
+        for m in holds.hold_markers:
+            sx, sy = world_to_screen(*m["world"])
+            sprite = m["sprite"]
+            sx1, sy1 = sprite.x, sprite.y
+            sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
+            if sx1 <= x <= sx2 and sy1 <= y <= sy2:
+                clicked_hold = m["data"]
+                break
 
     if clicked_hold:
         if clicked_hold["house"] == player_house:

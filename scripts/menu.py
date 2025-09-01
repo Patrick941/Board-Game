@@ -20,11 +20,26 @@ def is_point_inside(x, y, rect):
     rx, ry, rw, rh = rect
     return rx <= x <= rx + rw and ry <= y <= ry + rh
 
+def get_menu_rect(window_width, window_height, side):
+    width = int(window_width * 0.2)
+    height = int(window_height * 0.95)
+
+    if side == "left":
+        menu_x_base = 10
+        menu_y_base = (window_height - height) // 2
+    else:
+        menu_x_base = window_width - width - 10
+        menu_y_base = (window_height - height) // 2
+        
+    return(menu_x_base, menu_y_base, width, height)
+
 all_city_buttons = ["Train Soldiers", "Upgrade Units", "Improve Farms", "Plant Forests", "Improve Iron Mines", "Improve Gold Mines"]
 capital_buttons = ["Call Banners", "Declare Kingdom"]
 
-def draw_menu_button(text, x, y, height, width, font_name):
-    colour = (int(menu_bg_color[0] * 0.8), int(menu_bg_color[1] * 0.8), int(menu_bg_color[2] * 0.8))
+def draw_menu_button(text, x, y, height, width, font_name, selected):
+    if not selected: tint = 0.8
+    else: tint = 0.6
+    colour = (int(menu_bg_color[0] * tint), int(menu_bg_color[1] * tint), int(menu_bg_color[2] * tint))
     pyglet.shapes.RoundedRectangle(
         x, y, width, height,
         color=colour,
@@ -43,22 +58,22 @@ def draw_menu_button(text, x, y, height, width, font_name):
         color=(0, 0, 0, 255)
     ).draw()
 
-def draw_menu(selected_hold, window_width, window_height, font_name, side):
+def draw_menu(selected_hold, window_width, window_height, font_name, side, mouse_x, mouse_y):
     if not selected_hold:
         return
-    
+
     menu_width = int(window_width * 0.3)
     menu_height = int(window_height * 0.05)
     menu_x = (window_width - menu_width) // 2
     menu_y = int(window_height * 0.9)
-    
+
     pyglet.shapes.RoundedRectangle(
         menu_x, menu_y, menu_width, menu_height,
         color=menu_bg_color,
         batch=None,
         radius=25
     ).draw()
-    
+
     pyglet.text.Label(
         selected_hold["name"],
         font_name=font_name,
@@ -70,16 +85,8 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side):
         color=(0, 0, 0, 255)
     ).draw()
     
-    width = int(window_width * 0.2)
-    height = int(window_height * 0.95)
-    
-    if side == "left":
-        menu_x_base = 10
-        menu_y_base = (window_height - height) // 2
-    else:
-        menu_x_base = window_width - width - 10
-        menu_y_base = (window_height - height) // 2
-    
+    menu_x_base, menu_y_base, width, height = get_menu_rect(window_width, window_height, side)
+
     pyglet.shapes.RoundedRectangle(
         menu_x_base, menu_y_base,
         width, height,
@@ -87,7 +94,7 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side):
         batch=None,
         radius=20
     ).draw()
-    
+
     icon_y = menu_y_base + height - icon_size - menu_padding
     for i, (name, sprite_image) in enumerate(icons.items()):
         resource_count = selected_hold.get(name, 0)
@@ -114,7 +121,6 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side):
     button_width = width - (button_margin * 2)
     button_height = 50
     button_x = menu_x_base + button_margin
-    current_y = menu_y_base - button_margin + height - (2 * icon_size)
 
     buttons_to_draw = []
     if selected_hold["size"] == "Large":
@@ -124,5 +130,8 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side):
         buttons_to_draw.extend(all_city_buttons)
 
     for i, button_text in enumerate(buttons_to_draw):
-        y = menu_y_base + height - (2 * icon_size) - (button_margin + (i * (button_height + button_margin)))
-        draw_menu_button(button_text, button_x, y, button_height, button_width, font_name)
+        y = menu_y_base + height - (3 * icon_size) - (button_margin + (i * (button_height + button_margin)))
+        if is_point_inside(mouse_x, mouse_y, (button_x, y, button_width, button_height)):
+            draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, True)
+        else:
+            draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, False)
