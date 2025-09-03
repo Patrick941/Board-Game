@@ -33,12 +33,25 @@ def get_menu_rect(window_width, window_height, side):
         
     return(menu_x_base, menu_y_base, width, height)
 
-all_city_buttons = ["Train Soldiers", "Upgrade Units", "Improve Farms", "Plant Forests", "Improve Iron Mines", "Improve Gold Mines"]
-capital_buttons = ["Call Banners", "Declare Kingdom"]
+all_city_buttons = {
+    "Train Soldiers": {"pressed": False, "hover_text": "Train new soldiers for your garrison.", "hovering": False},
+    "Upgrade Units": {"pressed": False, "hover_text": "Upgrade existing soldiers to a higher tier.", "hovering": False},
+    "Improve Farms": {"pressed": False, "hover_text": "Increase food production from farms.", "hovering": False},
+    "Plant Forests": {"pressed": False, "hover_text": "Increase wood production and forestry capacity.", "hovering": False},
+    "Improve Iron Mines": {"pressed": False, "hover_text": "Increase iron production from mines.", "hovering": False},
+    "Improve Gold Mines": {"pressed": False, "hover_text": "Increase gold production from mines.", "hovering": False}
+}
+
+capital_buttons = {
+    "Call Banners": {"pressed": False, "hover_text": "Call your vassals to raise a larger army.", "hovering": False},
+    "Declare Kingdom": {"pressed": False, "hover_text": "Declare independence and form a new kingdom.", "hovering": False}
+}
 
 def draw_menu_button(text, x, y, height, width, font_name, selected):
-    if not selected: tint = 0.8
-    else: tint = 0.6
+    if not selected:
+        tint = 0.8
+    else:
+        tint = 0.6
     colour = (int(menu_bg_color[0] * tint), int(menu_bg_color[1] * tint), int(menu_bg_color[2] * tint))
     pyglet.shapes.RoundedRectangle(
         x, y, width, height,
@@ -57,6 +70,31 @@ def draw_menu_button(text, x, y, height, width, font_name, selected):
         anchor_y='center',
         color=(0, 0, 0, 255)
     ).draw()
+
+def draw_hover_text(text, x, y):
+    label = pyglet.text.Label(
+        text,
+        font_name='Arial',
+        font_size=16,
+        x=x, y=y,
+        anchor_x='left', anchor_y='bottom',
+        color=(255, 255, 255, 255),
+        batch=None
+    )
+    
+    # Draw a background for the hover text for better readability
+    padding = 5
+    bg_width = label.content_width + 2 * padding
+    bg_height = label.content_height + 2 * padding
+    bg_x = x - padding
+    bg_y = y - padding
+    
+    pyglet.shapes.Rectangle(
+        bg_x, bg_y, bg_width, bg_height,
+        color=(0, 0, 0, 180)
+    ).draw()
+    
+    label.draw()
 
 def draw_menu(selected_hold, window_width, window_height, font_name, side, mouse_x, mouse_y):
     if not selected_hold:
@@ -122,16 +160,67 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side, mouse
     button_height = 50
     button_x = menu_x_base + button_margin
 
-    buttons_to_draw = []
+    buttons_to_draw = {}
     if selected_hold["size"] == "Large":
-        buttons_to_draw.extend(capital_buttons)
-        buttons_to_draw.extend(all_city_buttons)
+        buttons_to_draw.update(capital_buttons)
+        buttons_to_draw.update(all_city_buttons)
     else:
-        buttons_to_draw.extend(all_city_buttons)
+        buttons_to_draw.update(all_city_buttons)
 
-    for i, button_text in enumerate(buttons_to_draw):
+    for i, (button_text, status) in enumerate(buttons_to_draw.items()):
         y = menu_y_base + height - (3 * icon_size) - (button_margin + (i * (button_height + button_margin)))
-        if is_point_inside(mouse_x, mouse_y, (button_x, y, button_width, button_height)):
-            draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, True)
-        else:
-            draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, False)
+        is_hovering = is_point_inside(mouse_x, mouse_y, (button_x, y, button_width, button_height))
+        # Update the hovering status
+        if button_text in all_city_buttons:
+            all_city_buttons[button_text]["hovering"] = is_hovering
+        elif button_text in capital_buttons:
+            capital_buttons[button_text]["hovering"] = is_hovering
+            
+        draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, is_hovering or status["pressed"])
+        if is_hovering:
+            draw_hover_text(buttons_to_draw[button_text]["hover_text"], mouse_x + 10, mouse_y + 10)
+            
+def get_button_status(selected_hold):
+    buttons_to_return = {}
+    
+    # Get the status of all buttons relevant to the selected_hold
+    if selected_hold["size"] == "Large":
+        buttons_to_return.update(capital_buttons)
+        buttons_to_return.update(all_city_buttons)
+    else:
+        buttons_to_return.update(all_city_buttons)
+
+    # Set all buttons to unpressed after their status is retrieved
+    for button_name in all_city_buttons:
+        all_city_buttons[button_name]["pressed"] = False
+    for button_name in capital_buttons:
+        capital_buttons[button_name]["pressed"] = False
+    
+    return buttons_to_return
+
+def on_mouse_press():
+    # Update the pressed status based on which button is currently hovering
+    for button_text, status in all_city_buttons.items():
+        if status["hovering"]:
+            status["pressed"] = True
+    for button_text, status in capital_buttons.items():
+        if status["hovering"]:
+            status["pressed"] = True
+            
+def get_true_button(selected_hold):
+    buttons_to_check = {}
+    if selected_hold["size"] == "Large":
+        buttons_to_check.update(capital_buttons)
+        buttons_to_check.update(all_city_buttons)
+    else:
+        buttons_to_check.update(all_city_buttons)
+        
+    true_buttons = [name for name, status in buttons_to_check.items() if status["pressed"]]
+    
+    if len(true_buttons) > 1:
+        print("Error: More than one button is True.")
+        exit(2)
+    elif len(true_buttons) == 1:
+        return true_buttons[0]
+    else:
+        return None

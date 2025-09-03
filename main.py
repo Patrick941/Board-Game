@@ -156,6 +156,9 @@ def on_draw():
             menu.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
         else:
             menu.draw_menu(selected_hold, window.width, window.height, font_name, "left", mouse_x, mouse_y)
+        result = menu.get_true_button(selected_hold)
+        if result is not None:
+            breakpoint
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
 @window.event
@@ -175,10 +178,9 @@ def on_mouse_press(x, y, button, modifiers):
     clicked_hold = None
     if selected_hold:
         if (int(selected_hold["x_cord"]) < (window.width / 2)):
-            if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")):
+            if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")) or menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "left")):
                 clicked_hold = selected_hold
-            elif menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")):
-                clicked_hold = selected_hold
+                menu.on_mouse_press()
     
     if not clicked_hold:
         for m in holds.hold_markers:
@@ -198,12 +200,6 @@ def on_mouse_press(x, y, button, modifiers):
             selected_hold = None
     else:
         selected_hold = None
-  
-    if selected_hold is not None:
-        menu_width = 300
-        x0, y0, w, h = 10, window.height - menu.menu_height - 10, menu_width, menu.menu_height
-        if menu.is_point_inside(x, y, (x0, y0, w, h)):
-            return
     
     selected_hold = None
 
@@ -217,6 +213,7 @@ def on_mouse_press(x, y, button, modifiers):
     else:
         print("ERROR turn counter mishandled, exiting")
         exit(2)
+        
 
 @window.event
 def on_mouse_release(x, y, button, modifiers):
