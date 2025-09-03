@@ -2,7 +2,7 @@ import pyglet
 from pyglet.window import key
 import math
 import os
-from scripts import holds, menu, scoreboard, turn_control, army
+from scripts import holds, menu, scoreboard, turn_control, army, buttons
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -16,6 +16,17 @@ background = pyglet.sprite.Sprite(background_image, x=0.0, y=0.0)
 
 arrow_image = pyglet.image.load(os.path.join(images_dir, 'arrow_out.png'))
 arrow = pyglet.sprite.Sprite(arrow_image)
+
+buttons_dict = {
+    "Train Soldiers": buttons.test_function,
+    "Upgrade Units": buttons.test_function,
+    "Improve Farms": buttons.test_function,
+    "Plant Forests": buttons.test_function,
+    "Improve Iron Mines": buttons.test_function,
+    "Improve Gold Mines": buttons.test_function,
+    "Call Banners": buttons.test_function,
+    "Declare Kingdom": buttons.test_function
+}
 
 player_house = "Tully"
 
@@ -157,8 +168,11 @@ def on_draw():
         else:
             menu.draw_menu(selected_hold, window.width, window.height, font_name, "left", mouse_x, mouse_y)
         result = menu.get_true_button(selected_hold)
+        menu.get_button_status(selected_hold)
         if result is not None:
-            breakpoint
+            buttons_dict[result]()
+            pass
+            
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
 @window.event
