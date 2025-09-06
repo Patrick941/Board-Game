@@ -55,76 +55,76 @@ def reset_resources():
 def load_holds(turn_counter):
     unit_types = ["_archer", "_soldier", "_knight", "_kingsguard"]
     global holds, hold_markers
-    holds = []
     hold_markers = []
 
-    reset_resources()
     csv_path = os.path.join(data_dir, 'holds.csv')
-    with open(csv_path, newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            region_name = row.get("region", "")
-            house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
-            resources_string = row.get("resources")
-            resources = resources_string.split("|")
-            size = row.get("size", "Small")
-            if size == "Small":
-                multiplier = 1
-            elif size == "Medium":
-                multiplier = 2
-            elif size == "Large":
-                multiplier = 4
-            else:
-                print("ERROR invalid castle size, exiting")
-                exit(2)
-                
-            for i, resource in enumerate(resources):
-                resources[i] = str(int(resources[i]) * multiplier)
-                
-            convert_type = {
-                0: army.UnitType.ARCHER,
-                1: army.UnitType.SOLDIER,
-                2: army.UnitType.KNIGHT,
-                3: army.UnitType.KINGSGUARD
-            }
-                
-            army_string = row.get("army")
-            army_values = army_string.split("|")
-            army_struct_array = []
-            for i, unit_type in enumerate(army_values):
-                for _ in range(int(unit_type)):
-                    unit = army.ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
-                    army_struct_array.append(unit)
+    if turn_counter[0] == 1:
+        holds = []
+        with open(csv_path, newline="", encoding="utf-8") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                region_name = row.get("region", "")
+                house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
+                resources_string = row.get("resources")
+                resources = resources_string.split("|")
+                size = row.get("size", "Small")
+                if size == "Small":
+                    multiplier = 1
+                elif size == "Medium":
+                    multiplier = 2
+                elif size == "Large":
+                    multiplier = 4
+                else:
+                    print("ERROR invalid castle size, exiting")
+                    exit(2)
                     
+                for i, resource in enumerate(resources):
+                    resources[i] = str(int(resources[i]) * multiplier)
+                    
+                convert_type = {
+                    0: army.UnitType.ARCHER,
+                    1: army.UnitType.SOLDIER,
+                    2: army.UnitType.KNIGHT,
+                    3: army.UnitType.KINGSGUARD
+                }
+                    
+                army_string = row.get("army")
+                army_values = army_string.split("|")
+                army_struct_array = []
+                for i, unit_type in enumerate(army_values):
+                    for _ in range(int(unit_type)):
+                        unit = army.ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
+                        army_struct_array.append(unit)
+                        
 
-            h = {
-                "name": row.get("name", ""),
-                "region": region_name,
-                "x_cord": row.get("x_cord", "0"),
-                "y_cord": row.get("y_cord", "0"),
-                "defense_rating": row.get("defense_rating", "0"),
-                "size": size,
-                "house": house_name,
-                "borders": row.get("borders", ".."),
-                "food": resources[0],
-                "wood": resources[1],
-                "iron":resources[2],
-                "gold": resources[3],
-                "army": army_struct_array
-            }
-            holds.append(h)
+                h = {
+                    "name": row.get("name", ""),
+                    "region": region_name,
+                    "x_cord": row.get("x_cord", "0"),
+                    "y_cord": row.get("y_cord", "0"),
+                    "defense_rating": row.get("defense_rating", "0"),
+                    "size": size,
+                    "house": house_name,
+                    "borders": row.get("borders", ".."),
+                    "food": resources[0],
+                    "wood": resources[1],
+                    "iron":resources[2],
+                    "gold": resources[3],
+                    "army": army_struct_array
+                }
+                holds.append(h)
 
-            for i, resource in enumerate(resources):
-                increase_list = list(house_colours[house_name][2])
-                increase_list[i] += int(resource)
-                house_colours[house_name][2] = tuple(increase_list)
+                for i, resource in enumerate(resources):
+                    increase_list = list(house_colours[house_name][2])
+                    increase_list[i] += int(resource)
+                    house_colours[house_name][2] = tuple(increase_list)
                 
-        for house, colours in house_colours.items():
-            for i, resource in enumerate(resources):
-                total_list = list(house_colours[house][3])
-                increase_list = list(house_colours[house][2])
-                total_list[i] += increase_list[i]
-                house_colours[house][3] = tuple(total_list)
+    for house, colours in house_colours.items():
+        for i in range(4):
+            total_list = list(house_colours[house][3])
+            increase_list = list(house_colours[house][2])
+            total_list[i] += increase_list[i]
+            house_colours[house][3] = tuple(total_list)
 
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):

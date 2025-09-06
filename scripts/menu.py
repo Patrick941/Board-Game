@@ -34,8 +34,10 @@ def get_menu_rect(window_width, window_height, side):
     return(menu_x_base, menu_y_base, width, height)
 
 all_city_buttons = {
-    "Train Soldiers": {"pressed": False, "hover_text": "Train new soldiers for your garrison.", "hovering": False},
-    "Upgrade Units": {"pressed": False, "hover_text": "Upgrade existing soldiers to a higher tier.", "hovering": False},
+    "Train Archer": {"pressed": False, "hover_text": "Train new archers for your garrison.", "hovering": False},
+    "Train Soldier": {"pressed": False, "hover_text": "Train new soldiers for your garrison.", "hovering": False},
+    "Train Knight": {"pressed": False, "hover_text": "Train new knights for your garrison.", "hovering": False},
+    "Appoint Kingsguard": {"pressed": False, "hover_text": "Appoint a kingsguard to protect your king.", "hovering": False},
     "Improve Farms": {"pressed": False, "hover_text": "Increase food production from farms.", "hovering": False},
     "Plant Forests": {"pressed": False, "hover_text": "Increase wood production and forestry capacity.", "hovering": False},
     "Improve Iron Mines": {"pressed": False, "hover_text": "Increase iron production from mines.", "hovering": False},
