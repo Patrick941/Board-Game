@@ -53,6 +53,7 @@ def reset_resources():
         house_colours[house][2] = (0, 0, 0, 0)
 
 def load_holds(turn_counter):
+    unit_types = ["_soldier", "_archer", "_knight", "_kingsguard"]
     global holds, hold_markers
     holds = []
     hold_markers = []
@@ -80,9 +81,22 @@ def load_holds(turn_counter):
             for i, resource in enumerate(resources):
                 resources[i] = str(int(resources[i]) * multiplier)
                 
+            convert_type = {
+                0: army.UnitType.SOLDIER,
+                1: army.UnitType.ARCHER,
+                2: army.UnitType.KNIGHT,
+                3: army.UnitType.KINGSGUARD
+            }
+                
             army_string = row.get("army")
-            army = army_string.split("|")
-            
+            army_values = army_string.split("|")
+            army_struct_array = []
+            for i, unit_type in enumerate(army_values):
+                for _ in range(int(unit_type)):
+                    unit = army.ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
+                    army_struct_array.append(unit)
+                    
+
             h = {
                 "name": row.get("name", ""),
                 "region": region_name,
@@ -96,7 +110,7 @@ def load_holds(turn_counter):
                 "wood": resources[1],
                 "iron":resources[2],
                 "gold": resources[3],
-                "army": army
+                "army": army_struct_array
             }
             holds.append(h)
 

@@ -18,14 +18,14 @@ arrow_image = pyglet.image.load(os.path.join(images_dir, 'arrow_out.png'))
 arrow = pyglet.sprite.Sprite(arrow_image)
 
 buttons_dict = {
-    "Train Soldiers": buttons.test_function,
-    "Upgrade Units": buttons.test_function,
-    "Improve Farms": buttons.test_function,
-    "Plant Forests": buttons.test_function,
-    "Improve Iron Mines": buttons.test_function,
-    "Improve Gold Mines": buttons.test_function,
-    "Call Banners": buttons.test_function,
-    "Declare Kingdom": buttons.test_function
+    "Train Soldiers": buttons.train_soldiers,
+    "Upgrade Units": buttons.upgrade_units,
+    "Improve Farms": buttons.improve_farms,
+    "Plant Forests": buttons.plant_forests,
+    "Improve Iron Mines": buttons.improve_iron_mines,
+    "Improve Gold Mines": buttons.improve_gold_mines,
+    "Call Banners": buttons.call_banners,
+    "Declare Kingdom": buttons.declare_kingdom
 }
 
 player_house = "Tully"
@@ -170,7 +170,7 @@ def on_draw():
         result = menu.get_true_button(selected_hold)
         menu.get_button_status(selected_hold)
         if result is not None:
-            buttons_dict[result]()
+            buttons_dict[result](selected_hold, player_house)
             pass
             
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
