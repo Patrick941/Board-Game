@@ -171,7 +171,7 @@ def on_draw():
         menu.get_button_status(selected_hold)
         if result is not None:
             buttons_dict[result](selected_hold, player_house)
-            pass
+            selected_hold = None
             
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 

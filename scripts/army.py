@@ -14,8 +14,8 @@ from dataclasses import dataclass
 from enum import Enum
 
 class UnitType(Enum):
-    SOLDIER = 1
-    ARCHER = 2
+    ARCHER = 1
+    SOLDIER = 2
     KNIGHT = 3
     KINGSGUARD = 4
 
@@ -36,8 +36,8 @@ def army_init():
             army_images[image_name] = pyglet.image.load(path)
 
 convert_type = {
-    UnitType.SOLDIER: 0,
-    UnitType.ARCHER: 1,
+    UnitType.ARCHER: 0,
+    UnitType.SOLDIER: 1,
     UnitType.KNIGHT: 2,
     UnitType.KINGSGUARD: 3
 }
