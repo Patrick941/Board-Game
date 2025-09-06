@@ -51,6 +51,28 @@ house_colours = {
 def reset_resources():
     for house_idx, (house,colours) in enumerate(house_colours.items()):
         house_colours[house][2] = (0, 0, 0, 0)
+        
+def get_output(hold):
+    food = int(hold.get("food", "0"))
+    wood = int(hold.get("wood", "0"))
+    iron = int(hold.get("iron", "0"))
+    gold = int(hold.get("gold", "0"))
+    
+    return (food, wood, iron, gold)
+
+def get_max_output(hold):
+    food = int(hold.get("food", "0")) * 2
+    wood = int(hold.get("wood", "0")) * 2
+    iron = int(hold.get("iron", "0")) * 2
+    gold = int(hold.get("gold", "0")) * 2
+    
+    return (food, wood, iron, gold)
+
+def set_output(hold, new_output):
+    hold["food"] = str(int(new_output[0]))
+    hold["wood"] = str(int(new_output[1]))
+    hold["iron"] = str(int(new_output[2]))
+    hold["gold"] = str(int(new_output[3]))
 
 def load_holds(turn_counter):
     unit_types = ["_archer", "_soldier", "_knight", "_kingsguard"]
@@ -114,10 +136,15 @@ def load_holds(turn_counter):
                 }
                 holds.append(h)
 
+    for house, colours in house_colours.items():
+        house_colours[house][2] = (0, 0, 0, 0)
+        for h in holds:
+            if h.get("house") == house:
+                resources = get_output(h)
                 for i, resource in enumerate(resources):
-                    increase_list = list(house_colours[house_name][2])
+                    increase_list = list(house_colours[house][2])
                     increase_list[i] += int(resource)
-                    house_colours[house_name][2] = tuple(increase_list)
+                    house_colours[house][2] = tuple(increase_list) 
                 
     for house, colours in house_colours.items():
         for i in range(4):
