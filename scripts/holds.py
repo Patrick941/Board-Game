@@ -73,6 +73,15 @@ def set_output(hold, new_output):
     hold["wood"] = str(int(new_output[1]))
     hold["iron"] = str(int(new_output[2]))
     hold["gold"] = str(int(new_output[3]))
+    
+def get_total_increase(player_house):
+    return house_colours[player_house][2]
+    
+def get_total_resources(player_house):
+    return house_colours[player_house][3]
+
+def set_total_resources(player_house, new_resources):
+    house_colours[player_house][3] = new_resources
 
 def load_holds(turn_counter):
     unit_types = ["_archer", "_soldier", "_knight", "_kingsguard"]
@@ -177,12 +186,6 @@ def load_holds(turn_counter):
                 "data": h,
                 "size": size
             })
-            
-def get_total_resources(player_house):
-    return house_colours[player_house][3]
-
-def set_total_resources(player_house, new_resources):
-    house_colours[player_house][3] = new_resources
 
 def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
     for hold in holds:
