@@ -21,47 +21,56 @@ houses = {
     "Tyrell": {
         "region": "The Reach",
         "colours": [(150, 255, 150), (150, 255, 150)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Stark": {
         "region": "The North",
         "colours": [(200, 200, 200), (240, 240, 240)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Arryn": {
         "region": "The Vale",
         "colours": [(173, 150, 255), (173, 216, 255)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Tully": {
         "region": "The Riverlands",
         "colours": [(170, 85, 230), (230, 85, 170)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Baratheon": {
         "region": "The Stormlands",
         "colours": [(255, 255, 100), (255, 255, 100)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Martell": {
         "region": "Dorne",
         "colours": [(255, 165, 50), (255, 165, 50)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Lannister": {
         "region": "The Westerlands",
         "colours": [(255, 70, 70), (255, 70, 70)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Greyjoy": {
         "region": "The Iron Islands",
         "colours": [(50, 160, 160), (50, 160, 160)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     },
     "Targaryen": {
         "region": "The Crownlands",
         "colours": [(100, 100, 100), (0, 0, 0)],
-        "resources": (0, 0, 0, 0)
+        "resources": (0, 0, 0, 0),
+        "kingdom": False
     }
 }
 
@@ -159,6 +168,10 @@ def load_holds(turn_counter):
                     for _ in range(int(unit_type)):
                         unit = army.ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
                         army_struct_array.append(unit)
+                if size == "Large":
+                    capital = True
+                else:
+                    capital = False
                         
 
                 h = {
@@ -174,7 +187,8 @@ def load_holds(turn_counter):
                     "wood": resources[1],
                     "iron":resources[2],
                     "gold": resources[3],
-                    "army": army_struct_array
+                    "army": army_struct_array,
+                    "capital": capital
                 }
                 holds.append(h)
                 

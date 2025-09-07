@@ -141,8 +141,24 @@ def improve_gold_mines(selected_hold, player_house):
     )
 
 
-def call_banners(selected_hold, player_house):
-    pass
+def call_banners(selected_hold, player_house):    
+    for hold in holds.holds:
+        if hold["house"] == player_house and hold != selected_hold:
+            for unit in hold["army"]:
+                selected_hold["army"].append(unit)
+                hold["army"].clear()
 
 def declare_kingdom(selected_hold, player_house):
-    pass
+    if holds.houses[player_house]["kingdom"] is True:
+        menu.draw_hover_text("You are already a kingdom!", 1000, 200)
+    else:
+        cost = [0, 0, 0, 0]
+        resources = holds.get_total_resources(player_house)
+        if (resources[0] > 200) and (resources[1] > 200) and (resources[2] > 200) and (resources[3] > 200):
+            for _ in range(7):
+                train_unit(selected_hold, player_house, cost, army.UnitType.KINGSGUARD, "_kingsguard")
+            holds.set_total_resources(player_house, (resources[0] - 200, resources[1] - 200, resources[2] - 200, resources[3] - 200))
+            holds.houses[player_house]["kingdom"] = True
+        else:
+            menu.draw_hover_text("Not enough resources to declare a kingdom!", 1000, 200)
+    

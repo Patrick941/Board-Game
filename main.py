@@ -159,7 +159,7 @@ def on_draw():
         result = menu.get_true_button(selected_hold)
         menu.get_button_status(selected_hold)
         if result is not None:
-            button_menu = menu.buttons_dict[result]['function'](selected_hold, player_house)
+            menu.buttons_dict[result]['function'](selected_hold, player_house)
             selected_hold = None
             
             
