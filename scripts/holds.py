@@ -16,16 +16,53 @@ icons = {
     "gold": pyglet.image.load(os.path.join(images_dir, 'Gold.png'))
 }
 
-house_region = {
-    "Tyrell": "The Reach",
-    "Stark": "The North",
-    "Arryn": "The Vale",
-    "Tully": "The Riverlands",
-    "Baratheon": "The Stormlands",
-    "Martell": "Dorne",
-    "Lannister": "The Westerlands",
-    "Greyjoy": "The Iron Islands",
-    "Targaryen": "The Crownlands"
+# Consolidated house data into a single dictionary
+houses = {
+    "Tyrell": {
+        "region": "The Reach",
+        "colours": [(150, 255, 150), (150, 255, 150)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Stark": {
+        "region": "The North",
+        "colours": [(200, 200, 200), (240, 240, 240)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Arryn": {
+        "region": "The Vale",
+        "colours": [(173, 150, 255), (173, 216, 255)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Tully": {
+        "region": "The Riverlands",
+        "colours": [(170, 85, 230), (230, 85, 170)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Baratheon": {
+        "region": "The Stormlands",
+        "colours": [(255, 255, 100), (255, 255, 100)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Martell": {
+        "region": "Dorne",
+        "colours": [(255, 165, 50), (255, 165, 50)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Lannister": {
+        "region": "The Westerlands",
+        "colours": [(255, 70, 70), (255, 70, 70)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Greyjoy": {
+        "region": "The Iron Islands",
+        "colours": [(50, 160, 160), (50, 160, 160)],
+        "resources": (0, 0, 0, 0)
+    },
+    "Targaryen": {
+        "region": "The Crownlands",
+        "colours": [(100, 100, 100), (0, 0, 0)],
+        "resources": (0, 0, 0, 0)
+    }
 }
 
 holds = []
@@ -36,21 +73,9 @@ small_castle_image = pyglet.image.load(os.path.join(images_dir, 'Small_Castle_Ic
 medium_castle_image = pyglet.image.load(os.path.join(images_dir, 'Medium_Castle_Icon.png'))
 large_castle_image = pyglet.image.load(os.path.join(images_dir, 'Large_Castle_Icon.png'))
 
-house_colours = {
-    "Tyrell": [(150, 255, 150),(150, 255, 150), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Stark": [(200, 200, 200),(240, 240, 240), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Arryn": [(173, 150, 255),(173, 216, 255), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Tully": [(170, 85, 230),(230, 85, 170), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Baratheon": [(255, 255, 100),(255, 255, 100), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Martell": [(255, 165, 50),(255, 165, 50), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Lannister": [(255, 70, 70),(255, 70, 70), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Greyjoy": [(50, 160, 160),(50, 160, 160), (0, 0, 0, 0), (0, 0, 0, 0)],
-    "Targaryen": [(100, 100, 100),(00, 00, 00), (0, 0, 0, 0), (0, 0, 0, 0)]
-}
-
 def reset_resources():
-    for house_idx, (house,colours) in enumerate(house_colours.items()):
-        house_colours[house][2] = (0, 0, 0, 0)
+    for house_name in houses:
+        houses[house_name]["resources"] = (0, 0, 0, 0)
         
 def get_output(hold):
     food = int(hold.get("food", "0"))
@@ -75,13 +100,19 @@ def set_output(hold, new_output):
     hold["gold"] = str(int(new_output[3]))
     
 def get_total_increase(player_house):
-    return house_colours[player_house][2]
+    increase_list = [0, 0, 0, 0]
+    for hold in holds:
+        if hold.get("house") == player_house:
+            resources = get_output(hold)
+            for i in range(4):
+                increase_list[i] += int(resources[i])
+    return tuple(increase_list)
     
 def get_total_resources(player_house):
-    return house_colours[player_house][3]
+    return houses[player_house]["resources"]
 
 def set_total_resources(player_house, new_resources):
-    house_colours[player_house][3] = new_resources
+    houses[player_house]["resources"] = new_resources
 
 def load_holds(turn_counter):
     unit_types = ["_archer", "_soldier", "_knight", "_kingsguard"]
@@ -95,7 +126,9 @@ def load_holds(turn_counter):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 region_name = row.get("region", "")
-                house_name = next((house for house, region in house_region.items() if region == region_name), "NA")
+                # Find house by region
+                house_name = next((name for name, data in houses.items() if data["region"] == region_name), "NA")
+                
                 resources_string = row.get("resources")
                 resources = resources_string.split("|")
                 size = row.get("size", "Small")
@@ -144,23 +177,12 @@ def load_holds(turn_counter):
                     "army": army_struct_array
                 }
                 holds.append(h)
-
-    for house, colours in house_colours.items():
-        house_colours[house][2] = (0, 0, 0, 0)
-        for h in holds:
-            if h.get("house") == house:
-                resources = get_output(h)
-                for i, resource in enumerate(resources):
-                    increase_list = list(house_colours[house][2])
-                    increase_list[i] += int(resource)
-                    house_colours[house][2] = tuple(increase_list) 
                 
-    for house, colours in house_colours.items():
-        for i in range(4):
-            total_list = list(house_colours[house][3])
-            increase_list = list(house_colours[house][2])
-            total_list[i] += increase_list[i]
-            house_colours[house][3] = tuple(total_list)
+    for house_name in houses:
+        total_resources = get_total_resources(house_name)
+        total_increase = get_total_increase(house_name)
+        total_resources = tuple(total_resources[i] + total_increase[i] for i in range(len(total_resources)))
+        set_total_resources(house_name, total_resources)
 
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
@@ -179,7 +201,7 @@ def load_holds(turn_counter):
             sprite = pyglet.sprite.Sprite(castle_img, x=0, y=0)
             sprite.scale = 0.5
             house = h.get("house", "")
-            sprite.color = house_colours[house][0]
+            sprite.color = houses[house]["colours"][0]
             hold_markers.append({
                 "world": (wx, wy),
                 "sprite": sprite,
@@ -187,7 +209,7 @@ def load_holds(turn_counter):
                 "size": size
             })
 
-def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
+def show_titles(holds, world_to_screen, zoom, font_name):
     for hold in holds:
         name = hold["name"]
         size = hold.get("size", "Small").lower()
@@ -209,7 +231,7 @@ def show_titles(holds, world_to_screen, zoom, font_name, house_colours):
         else:
             y_offset = 30
 
-        colour = house_colours[house][1]
+        colour = houses[house]["colours"][1]
 
         label = pyglet.text.Label(
             name,
@@ -231,7 +253,7 @@ def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_
         dy = mouse_y - y
         distance = (dx**2 + dy**2)**0.5
         if (distance < tolerance):
-            army.show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom)
+            army.show_units(houses, hold, window_width, window_height, camera_x, camera_y, zoom)
             
             
             icon_size = 40
@@ -271,5 +293,5 @@ def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_
                     y=y - 50,
                     anchor_x="left",
                     anchor_y="bottom",
-                    color=house_colours[hold["house"]][1]
+                    color=houses[hold["house"]]["colours"][1]
                 ).draw()

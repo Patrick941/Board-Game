@@ -3,7 +3,7 @@ from scripts import holds
 
 scoreboard_bg_colour = (228, 213, 183, 225)
 
-def open_scoreboard(holds_arr, house_colours, window_width, window_height, font_name):
+def open_scoreboard(holds_arr, houses, window_width, window_height, font_name):
     menu_width = int(window_width * 0.8)
     menu_height = int(window_height * 0.8)
     menu_x = (window_width - menu_width) // 2
@@ -22,7 +22,7 @@ def open_scoreboard(holds_arr, house_colours, window_width, window_height, font_
     zoom = 1
     for cat_idx, category in enumerate(categories):
         label_x = menu_x + padding + (menu_width * ((cat_idx) / (len(categories))))
-        label_y = menu_y + (menu_height * ((len(house_colours) - 1) / len(house_colours)))
+        label_y = menu_y + (menu_height * ((len(houses) - 1) / len(houses)))
         label = pyglet.text.Label(
             category,
             font_name=font_name,
@@ -34,19 +34,19 @@ def open_scoreboard(holds_arr, house_colours, window_width, window_height, font_
         )
         label.draw()
     
-        for house_idx, (house,colours) in enumerate(house_colours.items()):
+        for house_idx, house in enumerate(houses):
             total_list = holds.get_total_resources(house)
             total = str(sum(total_list))
             increase_list = holds.get_total_increase(house)
             increase = str(sum(increase_list))
             
-            label_y = menu_y + (menu_height * ((house_idx) / (len(house_colours) + 1)) )
+            label_y = menu_y + (menu_height * ((house_idx) / (len(houses) + 1)) )
             if category == "House": text = ""
             elif category == "Total": text = total + "/"
             else:  text = str(total_list[cat_idx - 1])  + "/"
             if category == "House": text = house
             elif category == "Total": text += str(increase)
-            else:  text += str(house_colours[house][2][cat_idx - 1])
+            else:  text += str(increase_list[cat_idx - 1]) 
             
             
             label = pyglet.text.Label(
@@ -56,7 +56,7 @@ def open_scoreboard(holds_arr, house_colours, window_width, window_height, font_
                 x=label_x,
                 y=label_y,
                 anchor_y='bottom',
-                color=colours[1]
+                color=houses[house]['colours'][1]
             )
             label.draw()
         

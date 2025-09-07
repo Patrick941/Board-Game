@@ -145,7 +145,7 @@ def on_draw():
             m["sprite"].y = sy - 30
         m["sprite"].draw()
         
-    holds.show_titles(holds.holds, world_to_screen, zoom, font_name, holds.house_colours)
+    holds.show_titles(holds.holds, world_to_screen, zoom, font_name)
 
     debug_text = ''
     for var_name in debug_vars:
@@ -155,12 +155,12 @@ def on_draw():
     debug_label.draw()
     
     if (not scoreboard_pressed) and (not selected_hold):
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.house_colours, player_house)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.houses, player_house)
     else:
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.house_colours, player_house)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.houses, player_house)
     
     if scoreboard_pressed:
-        scoreboard.open_scoreboard(holds.holds, holds.house_colours, window.width, window.height, font_name)
+        scoreboard.open_scoreboard(holds.holds, holds.houses, window.width, window.height, font_name)
         return
     
     if selected_hold is not None:

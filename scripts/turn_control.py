@@ -1,6 +1,7 @@
 import pyglet
 import os
 import math
+from scripts import holds
 
 bar_height = 40
 circle_button = None
@@ -19,11 +20,11 @@ icons = {
     "gold": pyglet.image.load(os.path.join(images_dir, 'Gold.png'))
 }
 
-def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, house_colours, player_house):
+def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house):
     pyglet.shapes.Rectangle(
         0, window_height - bar_height,
         window_width, bar_height,
-        color=house_colours[player_house][0]
+        color=houses[player_house]['colours'][0]
     ).draw()
 
     x_base = window_width * 0.02
@@ -46,7 +47,8 @@ def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, hous
     for i, (name, sprite_image) in enumerate(icons.items()):
         icon_x = icons_x_base + (icons_width / (2 * len(icons))) + (i * (icons_width / len(icons))) - (icon_size / 2)
         text_x = icon_x - icon_size - padding
-        text_string = str(house_colours[player_house][3][i])
+        total_list = holds.get_total_resources(player_house)
+        text_string = str(total_list[i])
         
         pyglet.text.Label(
             text_string,
@@ -68,10 +70,10 @@ def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, hous
         sprite.draw()
 
 
-def display_UI(window_width, window_height, font_name, is_hovering, turn_counter_ref, menu_only, house_colours, player_house):
+def display_UI(window_width, window_height, font_name, is_hovering, turn_counter_ref, menu_only, houses, player_house):
     global circle_button
 
-    draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, house_colours, player_house)
+    draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house)
 
     if menu_only:
         return
@@ -81,7 +83,7 @@ def display_UI(window_width, window_height, font_name, is_hovering, turn_counter
     by = radius + 20
     circle_button = (bx, by, radius)
 
-    circle_col = house_colours[player_house][1] if is_hovering else house_colours[player_house][0]
+    circle_col = houses[player_house]['colours'][1] if is_hovering else houses[player_house]['colours'][0]
     circle = pyglet.shapes.Circle(bx, by, radius, color=circle_col)
     circle.draw()
 
