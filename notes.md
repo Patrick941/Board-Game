@@ -1,3 +1,5 @@
+Add ability to move or attack partially
+
 Food Supply
 Troop Types
 Army Divisions with traits

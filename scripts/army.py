@@ -1,6 +1,7 @@
 import os
 import pyglet
 import math
+import random
 from enum import Enum
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +26,7 @@ class ArmyUnit:
     experience: int
     file_name: str = ""
 
+lethality = 4
 army_images = {}
 
 
@@ -41,6 +43,69 @@ convert_type = {
     UnitType.KNIGHT: 2,
     UnitType.KINGSGUARD: 3
 }
+
+def move_units(source_hold, target_hold):
+    units_to_move = source_hold["army"]
+    target_hold["army"].extend(units_to_move)
+    source_hold["army"] = []
+    
+def attack_hold(attacker_hold, defender_hold):
+    attacker_units = attacker_hold["army"]
+    defender_units = defender_hold["army"]
+    
+    # Create a combined list of unit dictionaries with roles
+    combined_units = []
+    for unit in attacker_units:
+        combined_units.append({"unit": unit, "role": "attacker"})
+    for unit in defender_units:
+        combined_units.append({"unit": unit, "role": "defender"})
+
+    random.shuffle(combined_units)
+
+    attacker_strength = sum(unit.unit_type.value * unit.experience for unit in attacker_units)
+    defender_strength = sum(unit.unit_type.value * unit.experience for unit in defender_units)
+
+    units_to_remove = []
+    units_to_promote = []
+
+    for entry in combined_units:
+        if attacker_strength <= 0 or defender_strength <= 0:
+            break
+        unit = entry["unit"]
+        role = entry["role"]
+        unit_power = unit.unit_type.value * unit.experience
+        total_strength = attacker_strength + defender_strength
+        if role == "attacker":
+            survival_prob = (unit_power / total_strength) - (defender_strength / total_strength) * lethality
+            rand_num = random.random()
+            if rand_num > survival_prob:
+                units_to_remove.append(unit)
+                attacker_strength -= unit_power
+            elif rand_num < survival_prob and unit.experience < 5:
+                units_to_promote.append(unit)
+        else:
+            survival_prob = (unit_power / total_strength) - (attacker_strength / total_strength) * lethality
+            rand_num = random.random()
+            if rand_num > survival_prob:
+                units_to_remove.append(unit)
+                defender_strength -= unit_power
+            elif rand_num < survival_prob and unit.experience < 5:
+                units_to_promote.append(unit)
+
+    for unit in units_to_remove:
+        if unit in attacker_units:
+            attacker_units.remove(unit)
+        elif unit in defender_units:
+            defender_units.remove(unit)
+
+    for unit in units_to_promote:
+        unit.experience += 1
+
+    if len(attacker_units) > 0 and len(defender_units) == 0:
+        move_units(attacker_hold, defender_hold)
+    else:
+        attacker_hold["army"] = attacker_units
+    
 
 def show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom):
     house = hold["house"]

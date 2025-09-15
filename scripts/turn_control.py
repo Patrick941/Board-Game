@@ -20,7 +20,9 @@ icons = {
     "gold": pyglet.image.load(os.path.join(images_dir, 'Gold.png'))
 }
 
-def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house):
+def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house, right_selected_hold):
+    if right_selected_hold is not None:
+        return
     pyglet.shapes.Rectangle(
         0, window_height - bar_height,
         window_width, bar_height,
@@ -70,10 +72,10 @@ def draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, hous
         sprite.draw()
 
 
-def display_UI(window_width, window_height, font_name, is_hovering, turn_counter_ref, menu_only, houses, player_house):
+def display_UI(window_width, window_height, font_name, is_hovering, turn_counter_ref, menu_only, houses, player_house, right_selected_hold):
     global circle_button
 
-    draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house)
+    draw_menu_bar(window_width, window_height, font_name, turn_counter_ref, houses, player_house, right_selected_hold)
 
     if menu_only:
         return

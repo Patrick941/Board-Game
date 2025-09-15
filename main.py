@@ -1,5 +1,5 @@
 import pyglet
-from pyglet.window import key
+from pyglet.window import key, mouse
 import math
 import os
 from scripts import holds, menu, scoreboard, turn_control, army, buttons
@@ -55,6 +55,7 @@ debug_label = pyglet.text.Label(
 )
 
 selected_hold = None
+right_selected_hold = None
 turn_counter = [1]
 
 
@@ -111,7 +112,7 @@ def on_mouse_motion(x, y, dx, dy):
 
 @window.event
 def on_draw():
-    global scoreboard_pressed, selected_hold, mouse_y, mouse_x
+    global scoreboard_pressed, selected_hold, mouse_y, mouse_x, right_selected_hold
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
@@ -142,9 +143,9 @@ def on_draw():
     debug_label.draw()
     
     if (not scoreboard_pressed) and (not selected_hold):
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.houses, player_house)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.houses, player_house, right_selected_hold)
     else:
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.houses, player_house)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.houses, player_house, right_selected_hold)
     
     if scoreboard_pressed:
         scoreboard.open_scoreboard(holds.holds, holds.houses, window.width, window.height, font_name)
@@ -162,6 +163,10 @@ def on_draw():
             menu.buttons_dict[result]['function'](selected_hold, player_house)
             selected_hold = None
             
+    if right_selected_hold is not None:
+        menu.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
+        show_borders(right_selected_hold["name"])
+        
             
     holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
@@ -173,51 +178,80 @@ def on_mouse_scroll(x, y, scroll_x, scroll_y):
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
-    global dragging, last_mouse_x, last_mouse_y, last_click, selected_hold
-    dragging = True
-    last_mouse_x, last_mouse_y = x, y
-    world_x, world_y = screen_to_world(x, y)
-    last_click = (round(world_x, 2), round(world_y, 2))
-    
-    clicked_hold = None
-    if selected_hold:
-        if (int(selected_hold["x_cord"]) < (window.width / 2)):
-            if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")) or menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "left")):
-                clicked_hold = selected_hold
-                menu.on_mouse_press()
-    
-    if not clicked_hold:
-        for m in holds.hold_markers:
-            sx, sy = world_to_screen(*m["world"])
-            sprite = m["sprite"]
-            sx1, sy1 = sprite.x, sprite.y
-            sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
-            if sx1 <= x <= sx2 and sy1 <= y <= sy2:
-                clicked_hold = m["data"]
-                break
+    global dragging, last_mouse_x, last_mouse_y, last_click, selected_hold, right_selected_hold
+    if button == mouse.LEFT:
+        dragging = True
+        last_mouse_x, last_mouse_y = x, y
+        world_x, world_y = screen_to_world(x, y)
+        last_click = (round(world_x, 2), round(world_y, 2))
+        right_selected_hold = None
+        
+        clicked_hold = None
+        if selected_hold:
+            if (int(selected_hold["x_cord"]) < (window.width / 2)):
+                if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")) or menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "left")):
+                    clicked_hold = selected_hold
+                    menu.on_mouse_press()
+        
+        if not clicked_hold:
+            for m in holds.hold_markers:
+                sx, sy = world_to_screen(*m["world"])
+                sprite = m["sprite"]
+                sx1, sy1 = sprite.x, sprite.y
+                sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
+                if sx1 <= x <= sx2 and sy1 <= y <= sy2:
+                    clicked_hold = m["data"]
+                    break
 
-    if clicked_hold:
-        if clicked_hold["house"] == player_house:
-            selected_hold = clicked_hold
-            return
+        if clicked_hold:
+            if clicked_hold["house"] == player_house:
+                selected_hold = clicked_hold
+                return
+            else:
+                selected_hold = None
         else:
             selected_hold = None
-    else:
+        
+        selected_hold = None
+
+        last_turn = turn_counter[0]
+        turn_control.handle_mouse_press(x, y, button, modifiers, turn_counter)
+        new_turn = turn_counter[0]
+        if new_turn == last_turn:
+            pass
+        elif new_turn == last_turn + 1:
+            holds.load_holds(turn_counter)
+        else:
+            print("ERROR turn counter mishandled, exiting")
+            exit(2)
+    elif button == mouse.RIGHT:
         selected_hold = None
     
-    selected_hold = None
-
-    last_turn = turn_counter[0]
-    turn_control.handle_mouse_press(x, y, button, modifiers, turn_counter)
-    new_turn = turn_counter[0]
-    if new_turn == last_turn:
-        pass
-    elif new_turn == last_turn + 1:
-        holds.load_holds(turn_counter)
-    else:
-        print("ERROR turn counter mishandled, exiting")
-        exit(2)
-        
+        if not right_selected_hold:
+            for m in holds.hold_markers:
+                sx, sy = world_to_screen(*m["world"])
+                sprite = m["sprite"]
+                sx1, sy1 = sprite.x, sprite.y
+                sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
+                if sx1 <= x <= sx2 and sy1 <= y <= sy2:
+                    if m["data"]["army"] == []:
+                        menu.draw_hover_text("No units to move or attack with", mouse_x + 10, mouse_y + 10)
+                        return
+                    else: 
+                        right_selected_hold = m["data"]
+                        break
+        else:
+            for m in holds.hold_markers:
+                sx, sy = world_to_screen(*m["world"])
+                sprite = m["sprite"]
+                sx1, sy1 = sprite.x, sprite.y
+                sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
+                if sx1 <= x <= sx2 and sy1 <= y <= sy2:
+                    if m["data"]["house"] == player_house:
+                        army.move_units(right_selected_hold, m["data"])
+                    else:
+                        army.attack_hold(right_selected_hold, m["data"])        
+                    right_selected_hold = None
 
 @window.event
 def on_mouse_release(x, y, button, modifiers):
