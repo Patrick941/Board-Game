@@ -17,7 +17,7 @@ background = pyglet.sprite.Sprite(background_image, x=0.0, y=0.0)
 arrow_image = pyglet.image.load(os.path.join(images_dir, 'arrow_out.png'))
 arrow = pyglet.sprite.Sprite(arrow_image)
 
-player_house = "Tully"
+player_house = "Lannister"
 
 camera_x = 0.0
 camera_y = 0.0

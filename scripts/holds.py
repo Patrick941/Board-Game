@@ -82,6 +82,11 @@ small_castle_image = pyglet.image.load(os.path.join(images_dir, 'Small_Castle_Ic
 medium_castle_image = pyglet.image.load(os.path.join(images_dir, 'Medium_Castle_Icon.png'))
 large_castle_image = pyglet.image.load(os.path.join(images_dir, 'Large_Castle_Icon.png'))
 
+wood_shield = pyglet.image.load(os.path.join(images_dir, 'wood_shield.png'))
+iron_shield = pyglet.image.load(os.path.join(images_dir, 'iron_shield.png'))
+gold_shield = pyglet.image.load(os.path.join(images_dir, 'gold_shield.png'))
+reinforced_shield = pyglet.image.load(os.path.join(images_dir, 'reinforced_shield.png'))
+
 def reset_resources():
     for house_name in houses:
         houses[house_name]["resources"] = (0, 0, 0, 0)
@@ -179,7 +184,7 @@ def load_holds(turn_counter):
                     "region": region_name,
                     "x_cord": row.get("x_cord", "0"),
                     "y_cord": row.get("y_cord", "0"),
-                    "defense_rating": row.get("defense_rating", "0"),
+                    "defense_rating": int(row.get("defense_rating", "0")),
                     "size": size,
                     "house": house_name,
                     "borders": row.get("borders", ".."),
@@ -267,13 +272,42 @@ def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_
         dy = mouse_y - y
         distance = (dx**2 + dy**2)**0.5
         if (distance < tolerance):
-            army.show_units(houses, hold, window_width, window_height, camera_x, camera_y, zoom)
-            
-            
             icon_size = 40
             icons_width = icon_size * 8
             bg_width = icons_width + (icon_size / 2)
             bg_height = 50
+            army.show_units(houses, hold, window_width, window_height, camera_x, camera_y, zoom)
+            
+            defense_rating = hold.get("defense_rating", 0)
+            if defense_rating <= 3:
+                shield_image = wood_shield
+            elif defense_rating <= 6:
+                shield_image = iron_shield
+            elif defense_rating <= 8:
+                shield_image = gold_shield
+            else:
+                shield_image = reinforced_shield
+            
+            shield_sprite = pyglet.sprite.Sprite(shield_image)
+            shield_sprite.scale = 0.1 * zoom
+            shield_x = x + (bg_width / 2)
+            shield_y = y - (3 * bg_height / 2)
+            shield_sprite.x = shield_x
+            shield_sprite.y = shield_y
+            shield_sprite.draw()
+            
+            defense_label = pyglet.text.Label(
+                str(defense_rating),
+                font_name=font_name,
+                font_size=50 * zoom,
+                x=shield_x + shield_sprite.width / 2 - 10,
+                y=shield_y + shield_sprite.height / 2 + 10,
+                anchor_x='center',
+                anchor_y='center',
+                color=(0, 0, 0, 255)
+            )
+            defense_label.draw()
+            
             bg_x = x - (bg_width / 2)
             bg_y = y - (bg_height) - 5
 
