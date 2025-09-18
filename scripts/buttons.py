@@ -146,7 +146,7 @@ def call_banners(selected_hold, player_house):
         if hold["house"] == player_house and hold != selected_hold:
             for unit in hold["army"]:
                 selected_hold["army"].append(unit)
-                hold["army"].clear()
+            hold["army"].clear()
 
 def declare_kingdom(selected_hold, player_house):
     if holds.houses[player_house]["kingdom"] is True:

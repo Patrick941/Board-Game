@@ -202,7 +202,9 @@ def load_holds(turn_counter):
         total_increase = get_total_increase(house_name)
         total_resources = tuple(total_resources[i] + total_increase[i] for i in range(len(total_resources)))
         set_total_resources(house_name, total_resources)
+    
 
+def reload_hold_markers():
     for h in holds:
         if all(h.get(k, "NA") != "NA" for k in ("name", "region", "x_cord", "y_cord")):
             try:

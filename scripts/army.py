@@ -3,6 +3,7 @@ import pyglet
 import math
 import random
 from enum import Enum
+from scripts import holds
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 army_dir = os.path.join(current_dir, "Images", "army")
@@ -25,8 +26,8 @@ class ArmyUnit:
     unit_type: UnitType
     experience: int
     file_name: str = ""
+    stars: int = 1
 
-lethality = 4
 army_images = {}
 
 
@@ -44,16 +45,20 @@ convert_type = {
     UnitType.KINGSGUARD: 3
 }
 
-def move_units(source_hold, target_hold):
-    units_to_move = source_hold["army"]
-    target_hold["army"].extend(units_to_move)
-    source_hold["army"] = []
+def move_units(attacker_hold, defender_hold):
+    defender_hold["army"].extend(attacker_hold["army"])
+    attacker_hold["army"] = []
     
-def attack_hold(attacker_hold, defender_hold):
-    attacker_units = attacker_hold["army"]
-    defender_units = defender_hold["army"]
+    defender_hold["house"] = attacker_hold["house"]
+    holds.reload_hold_markers()
+
+def attack_hold(attacker_hold, defender_hold, lethality=1.5, experience_gain_scale=3):
+    attacker_units = attacker_hold["army"][:]
+    defender_units = defender_hold["army"][:]
     
-    # Create a combined list of unit dictionaries with roles
+    attacker_strength = sum(unit.unit_type.value * unit.stars for unit in attacker_units)
+    defender_strength = sum(unit.unit_type.value * unit.stars for unit in defender_units)
+
     combined_units = []
     for unit in attacker_units:
         combined_units.append({"unit": unit, "role": "attacker"})
@@ -62,49 +67,65 @@ def attack_hold(attacker_hold, defender_hold):
 
     random.shuffle(combined_units)
 
-    attacker_strength = sum(unit.unit_type.value * unit.experience for unit in attacker_units)
-    defender_strength = sum(unit.unit_type.value * unit.experience for unit in defender_units)
-
     units_to_remove = []
-    units_to_promote = []
 
     for entry in combined_units:
         if attacker_strength <= 0 or defender_strength <= 0:
             break
+            
         unit = entry["unit"]
         role = entry["role"]
-        unit_power = unit.unit_type.value * unit.experience
+        unit_power = unit.unit_type.value * unit.stars
         total_strength = attacker_strength + defender_strength
+
+        if total_strength == 0:
+            break
+
         if role == "attacker":
-            survival_prob = (unit_power / total_strength) - (defender_strength / total_strength) * lethality
-            rand_num = random.random()
-            if rand_num > survival_prob:
-                units_to_remove.append(unit)
-                attacker_strength -= unit_power
-            elif rand_num < survival_prob and unit.experience < 5:
-                units_to_promote.append(unit)
+            death_prob = (defender_strength / total_strength) * lethality
         else:
-            survival_prob = (unit_power / total_strength) - (attacker_strength / total_strength) * lethality
-            rand_num = random.random()
-            if rand_num > survival_prob:
-                units_to_remove.append(unit)
+            death_prob = (attacker_strength / total_strength) * lethality
+
+        death_prob = max(0.1, min(0.9, death_prob))
+
+        rand_num = random.random()
+        if rand_num < death_prob:
+            units_to_remove.append(unit)
+            if role == "attacker":
+                attacker_strength -= unit_power
+            else:
                 defender_strength -= unit_power
-            elif rand_num < survival_prob and unit.experience < 5:
-                units_to_promote.append(unit)
+        else:
+            xp_gain = (1 + (death_prob * 2)) * experience_gain_scale
+            if death_prob > 0.7:
+                xp_gain += 1 * experience_gain_scale
+            unit.experience += int(xp_gain)
 
     for unit in units_to_remove:
         if unit in attacker_units:
             attacker_units.remove(unit)
-        elif unit in defender_units:
+        if unit in defender_units:
             defender_units.remove(unit)
 
-    for unit in units_to_promote:
-        unit.experience += 1
+    for unit in combined_units:
+        star_count = min(5, 1 + unit["unit"].experience // 10)
+        unit["unit"].stars = star_count
 
-    if len(attacker_units) > 0 and len(defender_units) == 0:
-        move_units(attacker_hold, defender_hold)
+    attacker_hold["army"] = attacker_units
+    defender_hold["army"] = defender_units
+
+    if len(defender_units) == 0 and len(attacker_units) > 0:
+        defender_hold["army"].extend(attacker_hold["army"])
+        attacker_hold["army"] = []
+        defender_hold["house"] = attacker_hold["house"]
+        holds.reload_hold_markers()
+        return "attacker_wins"
+    elif len(attacker_units) == 0:
+        return "defender_wins"
     else:
-        attacker_hold["army"] = attacker_units
+        return "stalemate"
+
+
     
 
 def show_units(house_region, hold, window_width, window_height, camera_x, camera_y, zoom):
@@ -144,7 +165,7 @@ def show_units(house_region, hold, window_width, window_height, camera_x, camera
     star_size = [60 ,30, 18, 12, 12]
 
     for i, sprite in enumerate(unit_sprites):
-        star_count = units[i].experience
+        star_count = units[i].stars
         icon_size = star_size[star_count - 1]
         scale = 0.02
         x_offset = 0

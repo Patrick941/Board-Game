@@ -221,12 +221,14 @@ def on_mouse_press(x, y, button, modifiers):
             pass
         elif new_turn == last_turn + 1:
             holds.load_holds(turn_counter)
+            holds.reload_hold_markers()
         else:
             print("ERROR turn counter mishandled, exiting")
             exit(2)
     elif button == mouse.RIGHT:
         selected_hold = None
     
+        # This logic needs to remain at bottom or requires some restructuring
         if not right_selected_hold:
             for m in holds.hold_markers:
                 sx, sy = world_to_screen(*m["world"])
@@ -234,12 +236,13 @@ def on_mouse_press(x, y, button, modifiers):
                 sx1, sy1 = sprite.x, sprite.y
                 sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
                 if sx1 <= x <= sx2 and sy1 <= y <= sy2:
-                    if m["data"]["army"] == []:
-                        menu.draw_hover_text("No units to move or attack with", mouse_x + 10, mouse_y + 10)
-                        return
-                    else: 
-                        right_selected_hold = m["data"]
-                        break
+                    if m["data"]["house"] == player_house:
+                        if m["data"]["army"] == []:
+                            menu.draw_hover_text("No units to move or attack with", mouse_x + 10, mouse_y + 10)
+                            return
+                        else: 
+                            right_selected_hold = m["data"]
+                            return
         else:
             for m in holds.hold_markers:
                 sx, sy = world_to_screen(*m["world"])
@@ -247,11 +250,17 @@ def on_mouse_press(x, y, button, modifiers):
                 sx1, sy1 = sprite.x, sprite.y
                 sx2, sy2 = sx1 + sprite.width, sy1 + sprite.height
                 if sx1 <= x <= sx2 and sy1 <= y <= sy2:
-                    if m["data"]["house"] == player_house:
-                        army.move_units(right_selected_hold, m["data"])
-                    else:
-                        army.attack_hold(right_selected_hold, m["data"])        
-                    right_selected_hold = None
+                    for border_hold in m["data"].get("borders", "").split("|"):
+                        border_hold = border_hold.strip()
+                        if border_hold == right_selected_hold["name"]:
+                            if m["data"]["house"] == player_house:
+                                army.move_units(right_selected_hold, m["data"])
+                                right_selected_hold = None
+                                return
+                            else:
+                                army.attack_hold(right_selected_hold, m["data"])        
+                                right_selected_hold = None
+                                return
 
 @window.event
 def on_mouse_release(x, y, button, modifiers):
@@ -284,6 +293,7 @@ def on_key_press(symbol, modifiers):
         scoreboard_pressed = not scoreboard_pressed
 
 holds.load_holds(turn_counter)
+holds.reload_hold_markers()
 army.army_init()
 
 if CSV_REFRESH_INTERVAL != -1:
