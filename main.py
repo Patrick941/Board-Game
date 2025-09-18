@@ -2,8 +2,9 @@ import pyglet
 from pyglet.window import key, mouse
 import math
 import os
-from scripts import holds, menu, scoreboard, turn_control, army, buttons
+from scripts import holds, menu, scoreboard, turn_control, buttons
 from scripts.animations_class import AnimationManager, Animation
+from scripts.army import army_manager
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -192,6 +193,7 @@ def on_draw():
         result = menu.get_true_button(selected_hold)
         menu.get_button_status(selected_hold)
         if result is not None:
+            # Use the new class-based function calls
             menu.buttons_dict[result]['function'](selected_hold, player_house)
             selected_hold = None
             
@@ -289,11 +291,13 @@ def on_mouse_press(x, y, button, modifiers):
                         border_hold = border_hold.strip()
                         if border_hold == right_selected_hold["name"]:
                             if m["data"]["house"] == player_house:
-                                army.move_units(right_selected_hold, m["data"])
+                                # Use the new class-based method
+                                army_manager.move_units(right_selected_hold, m["data"])
                                 right_selected_hold = None
                                 return
                             else:
-                                army.attack_hold(right_selected_hold, m["data"])        
+                                # Use the new class-based method
+                                army_manager.attack_hold(right_selected_hold, m["data"])        
                                 right_selected_hold = None
                                 return
 
@@ -309,7 +313,7 @@ def update(dt):
     if keys[pyglet.window.key.LEFT]:  dx -= 1.0
     if keys[pyglet.window.key.RIGHT]: dx += 1.0
     if keys[pyglet.window.key.UP]:    dy += 1.0
-    if keys[pyglet.window.key.DOWN]:  dy += 1.0
+    if keys[pyglet.window.key.DOWN]:  dy -= 1.0
     length = math.hypot(dx, dy)
     if length > 0:
         dx /= length; dy /= length
@@ -332,7 +336,7 @@ def on_key_press(symbol, modifiers):
 
 holds.load_holds(turn_counter)
 holds.reload_hold_markers()
-army.army_init()
+# army.army_init() is now handled by the ArmyManager constructor
 
 if CSV_REFRESH_INTERVAL != -1:
     pyglet.clock.schedule_interval(holds.load_holds(turn_counter), CSV_REFRESH_INTERVAL)

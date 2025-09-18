@@ -1,8 +1,8 @@
 import pyglet
 import csv
 import os
-from scripts import army
 from pyglet import shapes
+from scripts.army import ArmyUnit, UnitType, army_manager
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(current_dir, '..', 'Images')
@@ -160,10 +160,10 @@ def load_holds(turn_counter):
                     resources[i] = str(int(resources[i]) * multiplier)
                     
                 convert_type = {
-                    0: army.UnitType.ARCHER,
-                    1: army.UnitType.SOLDIER,
-                    2: army.UnitType.KNIGHT,
-                    3: army.UnitType.KINGSGUARD
+                    0: UnitType.ARCHER,
+                    1: UnitType.SOLDIER,
+                    2: UnitType.KNIGHT,
+                    3: UnitType.KINGSGUARD
                 }
                     
                 army_string = row.get("army")
@@ -171,7 +171,7 @@ def load_holds(turn_counter):
                 army_struct_array = []
                 for i, unit_type in enumerate(army_values):
                     for _ in range(int(unit_type)):
-                        unit = army.ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
+                        unit = ArmyUnit(convert_type[i], experience=1, file_name=unit_types[i])
                         army_struct_array.append(unit)
                 if size == "Large":
                     capital = True
@@ -278,7 +278,7 @@ def highlight_hold(window_width, window_height, camera_x, camera_y, zoom, mouse_
             icons_width = icon_size * 8
             bg_width = icons_width + (icon_size / 2)
             bg_height = 50
-            army.show_units(houses, hold, window_width, window_height, camera_x, camera_y, zoom)
+            army_manager.show_units(hold, window_width, window_height, camera_x, camera_y, zoom)
             
             defense_rating = hold.get("defense_rating", 0)
             if defense_rating <= 3:

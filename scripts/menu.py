@@ -34,82 +34,79 @@ def get_menu_rect(window_width, window_height, side):
         
     return(menu_x_base, menu_y_base, width, height)
 
-# Update the buttons_dict to use class methods
-# Create instances of your manager classes
 unit_trainer = UnitTrainer()
 resource_manager = ResourceManager()
 kingdom_manager = KingdomManager()
 
-# Update the buttons_dict to use instance methods instead of class methods
 buttons_dict = {
     "Train Archer": {
         "pressed": False, 
         "hover_text": "Train new archers for your garrison.", 
         "hovering": False, 
-        "function": unit_trainer.train_archer,  # Use instance method
+        "function": unit_trainer.train_archer,
         "city_type": "all_city"
     },
     "Train Soldier": {
         "pressed": False, 
         "hover_text": "Train new soldiers for your garrison.", 
         "hovering": False, 
-        "function": unit_trainer.train_soldier,  # Use instance method
+        "function": unit_trainer.train_soldier,
         "city_type": "all_city"
     },
     "Train Knight": {
         "pressed": False, 
         "hover_text": "Train new knights for your garrison.", 
         "hovering": False, 
-        "function": unit_trainer.train_knight,  # Use instance method
+        "function": unit_trainer.train_knight,
         "city_type": "all_city"
     },
     "Appoint Kingsguard": {
         "pressed": False, 
         "hover_text": "Appoint a kingsguard to protect your king.", 
         "hovering": False, 
-        "function": unit_trainer.appoint_kingsguard,  # Use instance method
+        "function": unit_trainer.appoint_kingsguard,
         "city_type": "all_city"
     },
     "Improve Farms": {
         "pressed": False, 
         "hover_text": "Increase food production from farms.", 
         "hovering": False, 
-        "function": resource_manager.improve_farms,  # Use instance method
+        "function": resource_manager.improve_farms,
         "city_type": "all_city"
     },
     "Plant Forests": {
         "pressed": False, 
         "hover_text": "Increase wood production and forestry capacity.", 
         "hovering": False, 
-        "function": resource_manager.plant_forests,  # Use instance method
+        "function": resource_manager.plant_forests,
         "city_type": "all_city"
     },
     "Improve Iron Mines": {
         "pressed": False, 
         "hover_text": "Increase iron production from mines.", 
         "hovering": False, 
-        "function": resource_manager.improve_iron_mines,  # Use instance method
+        "function": resource_manager.improve_iron_mines,
         "city_type": "all_city"
     },
     "Improve Gold Mines": {
         "pressed": False, 
         "hover_text": "Increase gold production from mines.", 
         "hovering": False, 
-        "function": resource_manager.improve_gold_mines,  # Use instance method
+        "function": resource_manager.improve_gold_mines,
         "city_type": "all_city"
     },
     "Call Banners": {
         "pressed": False, 
         "hover_text": "Call your vassals to raise a larger army.", 
         "hovering": False, 
-        "function": kingdom_manager.call_banners,  # Use instance method
+        "function": kingdom_manager.call_banners,
         "city_type": "capital"
     },
     "Declare Kingdom": {
         "pressed": False, 
         "hover_text": "Declare independence and form a new kingdom.", 
         "hovering": False, 
-        "function": kingdom_manager.declare_kingdom,  # Use instance method
+        "function": kingdom_manager.declare_kingdom,
         "city_type": "capital"
     }
 }
@@ -150,7 +147,6 @@ def draw_hover_text(text, x, y):
         batch=None
     )
     
-    # Draw a background for the hover text for better readability
     padding = 5
     bg_width = label.content_width + 2 * padding
     bg_height = label.content_height + 2 * padding
@@ -239,7 +235,6 @@ def draw_menu(selected_hold, window_width, window_height, font_name, side, mouse
     for i, (button_text, status) in enumerate(buttons_to_draw.items()):
         y = menu_y_base + height - (3 * icon_size) - (button_margin + (i * (button_height + button_margin)))
         is_hovering = is_point_inside(mouse_x, mouse_y, (button_x, y, button_width, button_height))
-        # Update the hovering status
         buttons_to_draw[button_text]["hovering"] = is_hovering
             
         draw_menu_button(button_text, button_x, y, button_height, button_width, font_name, is_hovering or status["pressed"])
@@ -255,7 +250,6 @@ def get_button_status(selected_hold):
             if buttons_dict[button_item]["city_type"] == "all_city":
                 buttons_to_return[button_item] = buttons_dict[button_item]
 
-    # Set all buttons to unpressed after their status is retrieved
     for button in buttons_to_return:
         buttons_dict[button]["pressed"] = False
     
