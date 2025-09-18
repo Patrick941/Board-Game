@@ -3,6 +3,7 @@ from pyglet.window import key, mouse
 import math
 import os
 from scripts import holds, menu, scoreboard, turn_control, army, buttons
+from scripts.animations_class import AnimationManager, Animation
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -58,6 +59,10 @@ selected_hold = None
 right_selected_hold = None
 turn_counter = [1]
 
+# Initialize animation manager
+animation_manager = AnimationManager()
+# List to store active visual animations
+visual_animations = []
 
 def screen_to_world(sx, sy):
     return (camera_x + sx / zoom, camera_y + sy / zoom)
@@ -103,6 +108,29 @@ def show_borders(selected_name=None):
             sx1, sy1 = world_to_screen(wx1, wy1)
             sx2, sy2 = world_to_screen(wx2, wy2)
             draw_line(sx1, sy1, sx2, sy2)
+
+def create_click_animation(x, y):
+    """Create a visible circle animation at click position"""
+    # Create a circle shape
+    circle = pyglet.shapes.Circle(x, y, 10, color=(255, 0, 0))
+    circle.opacity = 0
+    
+    # Create animation
+    def update_animation(progress):
+        # Expand the circle and fade it out
+        circle.radius = 10 + 40 * progress
+        circle.opacity = int(255 * (1 - progress))
+    
+    def on_complete():
+        # Remove the animation from the list when complete
+        if circle in visual_animations:
+            visual_animations.remove(circle)
+    
+    animation = Animation(0.5, update_animation, on_complete)
+    visual_animations.append(circle)
+    animation_manager.start_animation(animation)
+    
+    return animation
             
 @window.event
 def on_mouse_motion(x, y, dx, dy):
@@ -116,6 +144,10 @@ def on_draw():
     window.clear()
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
+    
+    # Draw visual animations
+    for anim in visual_animations:
+        anim.draw()
     
     for m in holds.hold_markers:
         sx, sy = world_to_screen(*m["world"])
@@ -185,6 +217,9 @@ def on_mouse_press(x, y, button, modifiers):
         world_x, world_y = screen_to_world(x, y)
         last_click = (round(world_x, 2), round(world_y, 2))
         right_selected_hold = None
+        
+        # Create a visible click animation
+        create_click_animation(x, y)
         
         clicked_hold = None
         if selected_hold:
@@ -285,6 +320,9 @@ def update(dt):
     camera_x += dx; camera_y += dy
     camera_x = max(0.0, min(camera_x, background.width - window.width))
     camera_y = max(0.0, min(camera_y, background.height - window.height))
+    
+    # Update animations
+    animation_manager.update(dt)
     
 @window.event
 def on_key_press(symbol, modifiers):

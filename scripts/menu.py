@@ -1,6 +1,6 @@
 import pyglet
 import os
-from scripts import buttons
+from scripts.buttons import UnitTrainer, ResourceManager, KingdomManager
 
 menu_bg_color = (228, 213, 183)
 menu_padding = 10
@@ -34,18 +34,86 @@ def get_menu_rect(window_width, window_height, side):
         
     return(menu_x_base, menu_y_base, width, height)
 
+# Update the buttons_dict to use class methods
+# Create instances of your manager classes
+unit_trainer = UnitTrainer()
+resource_manager = ResourceManager()
+kingdom_manager = KingdomManager()
+
+# Update the buttons_dict to use instance methods instead of class methods
 buttons_dict = {
-    "Train Archer": {"pressed": False, "hover_text": "Train new archers for your garrison.", "hovering": False, "function": buttons.train_archer, "city_type" : "all_city"},
-    "Train Soldier": {"pressed": False, "hover_text": "Train new soldiers for your garrison.", "hovering": False, "function": buttons.train_soldier, "city_type" : "all_city"},
-    "Train Knight": {"pressed": False, "hover_text": "Train new knights for your garrison.", "hovering": False, "function": buttons.train_knight, "city_type" : "all_city"},
-    "Appoint Kingsguard": {"pressed": False, "hover_text": "Appoint a kingsguard to protect your king.", "hovering": False, "function": buttons.appoint_kingsguard, "city_type" : "all_city"},
-    "Improve Farms": {"pressed": False, "hover_text": "Increase food production from farms.", "hovering": False, "function": buttons.improve_farms, "city_type" : "all_city"},
-    "Plant Forests": {"pressed": False, "hover_text": "Increase wood production and forestry capacity.", "hovering": False, "function": buttons.plant_forests, "city_type" : "all_city"},
-    "Improve Iron Mines": {"pressed": False, "hover_text": "Increase iron production from mines.", "hovering": False, "function": buttons.improve_iron_mines, "city_type" : "all_city"},
-    "Improve Gold Mines": {"pressed": False, "hover_text": "Increase gold production from mines.", "hovering": False, "function": buttons.improve_gold_mines, "city_type" : "all_city"},
-    "Call Banners": {"pressed": False, "hover_text": "Call your vassals to raise a larger army.", "hovering": False, "function": buttons.call_banners, "city_type" : "capital"},
-    "Declare Kingdom": {"pressed": False, "hover_text": "Declare independence and form a new kingdom.", "hovering": False, "function": buttons.declare_kingdom, "city_type" : "capital"}
+    "Train Archer": {
+        "pressed": False, 
+        "hover_text": "Train new archers for your garrison.", 
+        "hovering": False, 
+        "function": unit_trainer.train_archer,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Train Soldier": {
+        "pressed": False, 
+        "hover_text": "Train new soldiers for your garrison.", 
+        "hovering": False, 
+        "function": unit_trainer.train_soldier,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Train Knight": {
+        "pressed": False, 
+        "hover_text": "Train new knights for your garrison.", 
+        "hovering": False, 
+        "function": unit_trainer.train_knight,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Appoint Kingsguard": {
+        "pressed": False, 
+        "hover_text": "Appoint a kingsguard to protect your king.", 
+        "hovering": False, 
+        "function": unit_trainer.appoint_kingsguard,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Improve Farms": {
+        "pressed": False, 
+        "hover_text": "Increase food production from farms.", 
+        "hovering": False, 
+        "function": resource_manager.improve_farms,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Plant Forests": {
+        "pressed": False, 
+        "hover_text": "Increase wood production and forestry capacity.", 
+        "hovering": False, 
+        "function": resource_manager.plant_forests,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Improve Iron Mines": {
+        "pressed": False, 
+        "hover_text": "Increase iron production from mines.", 
+        "hovering": False, 
+        "function": resource_manager.improve_iron_mines,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Improve Gold Mines": {
+        "pressed": False, 
+        "hover_text": "Increase gold production from mines.", 
+        "hovering": False, 
+        "function": resource_manager.improve_gold_mines,  # Use instance method
+        "city_type": "all_city"
+    },
+    "Call Banners": {
+        "pressed": False, 
+        "hover_text": "Call your vassals to raise a larger army.", 
+        "hovering": False, 
+        "function": kingdom_manager.call_banners,  # Use instance method
+        "city_type": "capital"
+    },
+    "Declare Kingdom": {
+        "pressed": False, 
+        "hover_text": "Declare independence and form a new kingdom.", 
+        "hovering": False, 
+        "function": kingdom_manager.declare_kingdom,  # Use instance method
+        "city_type": "capital"
+    }
 }
+
 
 def draw_menu_button(text, x, y, height, width, font_name, selected):
     if not selected:
