@@ -3,7 +3,6 @@ import pyglet
 import math
 import random
 from enum import Enum
-from scripts import holds
 from dataclasses import dataclass
 from enum import Enum
 
@@ -43,13 +42,13 @@ class ArmyManager:
                 path = os.path.join(army_dir, filename)
                 self.army_images[image_name] = pyglet.image.load(path)
 
-    def move_units(self, attacker_hold, defender_hold):
+    def move_units(self, attacker_hold, defender_hold, hold_manager):
         defender_hold["army"].extend(attacker_hold["army"])
         attacker_hold["army"] = []
         defender_hold["house"] = attacker_hold["house"]
-        holds.reload_hold_markers()
+        hold_manager.reload_hold_markers()
 
-    def attack_hold(self, attacker_hold, defender_hold, lethality=1.5, experience_gain_scale=3):
+    def attack_hold(self, attacker_hold, defender_hold, hold_manager, lethality=1.5, experience_gain_scale=3):
         attacker_units = attacker_hold["army"][:]
         defender_units = defender_hold["army"][:]
 
@@ -114,7 +113,7 @@ class ArmyManager:
             defender_hold["army"].extend(attacker_hold["army"])
             attacker_hold["army"] = []
             defender_hold["house"] = attacker_hold["house"]
-            holds.reload_hold_markers()
+            hold_manager.reload_hold_markers()
             return "attacker_wins"
         elif len(attacker_units) == 0:
             return "defender_wins"

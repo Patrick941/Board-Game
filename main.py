@@ -2,9 +2,12 @@ import pyglet
 from pyglet.window import key, mouse
 import math
 import os
-from scripts import holds, menu, scoreboard, turn_control, buttons
+from scripts.holds import hold_manager
 from scripts.animations_class import AnimationManager, Animation
+from scripts.scoreboard import scoreboard
 from scripts.army import army_manager
+from scripts.turn_control import turn_control
+from scripts.menu import menu_manager
 
 debug_vars = ['camera_x', 'camera_y', 'camera_speed', 'zoom', 'last_click']
 
@@ -60,9 +63,7 @@ selected_hold = None
 right_selected_hold = None
 turn_counter = [1]
 
-# Initialize animation manager
 animation_manager = AnimationManager()
-# List to store active visual animations
 visual_animations = []
 
 def screen_to_world(sx, sy):
@@ -90,9 +91,9 @@ def draw_line(x1, y1, x2, y2, width=30, opacity=255):
     arrow.draw()
 
 def show_borders(selected_name=None):
-    hold_lookup = {h["name"]: (float(h["x_cord"]), float(h["y_cord"])) for h in holds.holds}
-    borders_lookup = {h["name"]: set(h.get("borders", "").split("|")) for h in holds.holds}
-    for hold in holds.holds:
+    hold_lookup = {h["name"]: (float(h["x_cord"]), float(h["y_cord"])) for h in hold_manager.holds}
+    borders_lookup = {h["name"]: set(h.get("borders", "").split("|")) for h in hold_manager.holds}
+    for hold in hold_manager.holds:
         name = hold["name"]
         if selected_name and name != selected_name:
             continue
@@ -111,19 +112,14 @@ def show_borders(selected_name=None):
             draw_line(sx1, sy1, sx2, sy2)
 
 def create_click_animation(x, y):
-    """Create a visible circle animation at click position"""
-    # Create a circle shape
     circle = pyglet.shapes.Circle(x, y, 10, color=(255, 0, 0))
     circle.opacity = 0
     
-    # Create animation
     def update_animation(progress):
-        # Expand the circle and fade it out
         circle.radius = 10 + 40 * progress
         circle.opacity = int(255 * (1 - progress))
     
     def on_complete():
-        # Remove the animation from the list when complete
         if circle in visual_animations:
             visual_animations.remove(circle)
     
@@ -146,11 +142,10 @@ def on_draw():
     background.update(x=-camera_x, y=-camera_y, scale=zoom)
     background.draw()
     
-    # Draw visual animations
     for anim in visual_animations:
         anim.draw()
     
-    for m in holds.hold_markers:
+    for m in hold_manager.hold_markers:
         sx, sy = world_to_screen(*m["world"])
         if m["size"] == "large":
             m["sprite"].scale = zoom * 0.125
@@ -166,7 +161,7 @@ def on_draw():
             m["sprite"].y = sy - 30
         m["sprite"].draw()
         
-    holds.show_titles(holds.holds, world_to_screen, zoom, font_name)
+    hold_manager.show_titles(world_to_screen, zoom, font_name)
 
     debug_text = ''
     for var_name in debug_vars:
@@ -176,33 +171,32 @@ def on_draw():
     debug_label.draw()
     
     if (not scoreboard_pressed) and (not selected_hold):
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, holds.houses, player_house, right_selected_hold)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, False, hold_manager.houses, player_house, right_selected_hold)
     else:
-        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, holds.houses, player_house, right_selected_hold)
+        turn_control.display_UI(window.width, window.height, font_name, False, turn_counter, True, hold_manager.houses, player_house, right_selected_hold)
     
     if scoreboard_pressed:
-        scoreboard.open_scoreboard(holds.holds, holds.houses, window.width, window.height, font_name)
+        scoreboard.open_scoreboard(hold_manager.holds, hold_manager.houses, window.width, window.height, font_name)
         return
     
     if selected_hold is not None:
         show_borders(selected_hold["name"])
         if (int(selected_hold["x_cord"]) < (window.width / 2)):
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
+            menu_manager.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
         else:
-            menu.draw_menu(selected_hold, window.width, window.height, font_name, "left", mouse_x, mouse_y)
-        result = menu.get_true_button(selected_hold)
-        menu.get_button_status(selected_hold)
+            menu_manager.draw_menu(selected_hold, window.width, window.height, font_name, "left", mouse_x, mouse_y)
+        result = menu_manager.get_true_button(selected_hold)
+        menu_manager.get_button_status(selected_hold)
         if result is not None:
-            # Use the new class-based function calls
-            menu.buttons_dict[result]['function'](selected_hold, player_house)
+            menu_manager.buttons_dict[result]['function'](selected_hold, player_house, menu_manager)
             selected_hold = None
             
     if right_selected_hold is not None:
-        menu.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
+        menu_manager.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
         show_borders(right_selected_hold["name"])
         
             
-    holds.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
+    hold_manager.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)
 
 @window.event
 def on_mouse_scroll(x, y, scroll_x, scroll_y):
@@ -226,12 +220,12 @@ def on_mouse_press(x, y, button, modifiers):
         clicked_hold = None
         if selected_hold:
             if (int(selected_hold["x_cord"]) < (window.width / 2)):
-                if menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "right")) or menu.is_point_inside(mouse_x, mouse_y, menu.get_menu_rect(window.width, window.height, "left")):
+                if menu_manager.is_point_inside(mouse_x, mouse_y, menu_manager.get_menu_rect(window.width, window.height, "right")) or menu_manager.is_point_inside(mouse_x, mouse_y, menu_manager.get_menu_rect(window.width, window.height, "left")):
                     clicked_hold = selected_hold
-                    menu.on_mouse_press()
+                    menu_manager.on_mouse_press()
         
         if not clicked_hold:
-            for m in holds.hold_markers:
+            for m in hold_manager.hold_markers:
                 sx, sy = world_to_screen(*m["world"])
                 sprite = m["sprite"]
                 sx1, sy1 = sprite.x, sprite.y
@@ -257,17 +251,16 @@ def on_mouse_press(x, y, button, modifiers):
         if new_turn == last_turn:
             pass
         elif new_turn == last_turn + 1:
-            holds.load_holds(turn_counter)
-            holds.reload_hold_markers()
+            hold_manager.load_holds(turn_counter)
+            hold_manager.reload_hold_markers()
         else:
             print("ERROR turn counter mishandled, exiting")
             exit(2)
     elif button == mouse.RIGHT:
         selected_hold = None
     
-        # This logic needs to remain at bottom or requires some restructuring
         if not right_selected_hold:
-            for m in holds.hold_markers:
+            for m in hold_manager.hold_markers:
                 sx, sy = world_to_screen(*m["world"])
                 sprite = m["sprite"]
                 sx1, sy1 = sprite.x, sprite.y
@@ -275,13 +268,13 @@ def on_mouse_press(x, y, button, modifiers):
                 if sx1 <= x <= sx2 and sy1 <= y <= sy2:
                     if m["data"]["house"] == player_house:
                         if m["data"]["army"] == []:
-                            menu.draw_hover_text("No units to move or attack with", mouse_x + 10, mouse_y + 10)
+                            menu_manager.draw_hover_text("No units to move or attack with", mouse_x + 10, mouse_y + 10)
                             return
                         else: 
                             right_selected_hold = m["data"]
                             return
         else:
-            for m in holds.hold_markers:
+            for m in hold_manager.hold_markers:
                 sx, sy = world_to_screen(*m["world"])
                 sprite = m["sprite"]
                 sx1, sy1 = sprite.x, sprite.y
@@ -291,13 +284,11 @@ def on_mouse_press(x, y, button, modifiers):
                         border_hold = border_hold.strip()
                         if border_hold == right_selected_hold["name"]:
                             if m["data"]["house"] == player_house:
-                                # Use the new class-based method
-                                army_manager.move_units(right_selected_hold, m["data"])
+                                army_manager.move_units(right_selected_hold, m["data"], hold_manager)
                                 right_selected_hold = None
                                 return
                             else:
-                                # Use the new class-based method
-                                army_manager.attack_hold(right_selected_hold, m["data"])        
+                                army_manager.attack_hold(right_selected_hold, m["data"], hold_manager)        
                                 right_selected_hold = None
                                 return
 
@@ -334,11 +325,10 @@ def on_key_press(symbol, modifiers):
     if symbol == key.TAB:
         scoreboard_pressed = not scoreboard_pressed
 
-holds.load_holds(turn_counter)
-holds.reload_hold_markers()
-# army.army_init() is now handled by the ArmyManager constructor
+hold_manager.load_holds(turn_counter)
+hold_manager.reload_hold_markers()
 
 if CSV_REFRESH_INTERVAL != -1:
-    pyglet.clock.schedule_interval(holds.load_holds(turn_counter), CSV_REFRESH_INTERVAL)
+    pyglet.clock.schedule_interval(hold_manager.load_holds(turn_counter), CSV_REFRESH_INTERVAL)
 pyglet.clock.schedule_interval(update, 1/120.0)
 pyglet.app.run()
