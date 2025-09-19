@@ -194,6 +194,7 @@ def on_draw():
     if right_selected_hold is not None:
         menu_manager.draw_menu(selected_hold, window.width, window.height, font_name, "right", mouse_x, mouse_y)
         show_borders(right_selected_hold["name"])
+        army_manager.show_units(right_selected_hold, camera_x, camera_y, zoom)
         
             
     hold_manager.highlight_hold(window.width, window.height, camera_x, camera_y, zoom, mouse_x, mouse_y, 50, font_name)

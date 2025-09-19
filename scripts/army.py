@@ -119,20 +119,36 @@ class ArmyManager:
             return "defender_wins"
         else:
             return "stalemate"
-
+        
     def show_units(self, hold, window_width, window_height, camera_x, camera_y, zoom):
+        units = hold["army"]
+        
+        unit_sprites = self._draw_units(hold, camera_x, camera_y, zoom)
+        
+        self._draw_stars(units, unit_sprites, zoom)
+
+    def show_units_ui_elements(self, hold, camera_x, camera_y, zoom):
+        
         house = hold["house"]
         units = hold["army"]
-        total_army = len(units)
+        
+        unit_sprites = self._draw_units(hold, camera_x, camera_y, zoom)
+        
+        self._draw_stars(units, unit_sprites, zoom)
+
+    def _draw_units(self, hold, camera_x, camera_y, zoom):
+        
+        house = hold["house"]
+        units = hold["army"]
         icon_size = 150
         compactor = 0.4
-
+        
         unit_sprites = []
         total_unit_counts = {unit_type: 0 for unit_type in UnitType}
         unit_counts = {unit_type: 0 for unit_type in UnitType}
         for unit in units:
             total_unit_counts[unit.unit_type] += 1
-
+        
         for unit in units:
             i = self.convert_type[unit.unit_type]
             image_name = house + unit.file_name
@@ -151,15 +167,19 @@ class ArmyManager:
             sprite.scale *= zoom
             sprite.draw()
             unit_sprites.append(sprite)
+        
+        return unit_sprites
 
+    def _draw_stars(self, units, unit_sprites, zoom):
+        
         star_size = [60, 30, 18, 12, 12]
-
+        
         for i, sprite in enumerate(unit_sprites):
             star_count = units[i].stars
             icon_size = star_size[star_count - 1]
             scale = 0.02
-            x_offset = 0
             y_offset = -15
+            
             x_offset = -((star_count - 1) * icon_size) / 2
                 
             for j in range(star_count):
@@ -169,10 +189,10 @@ class ArmyManager:
                     offset_num = abs(math.floor(star_count / 2) - j)
                 else:
                     offset_num = abs((star_count / 2 - 0.5) - j) + 0.5
-
+                
                 star_sprite.x = sprite.x + (sprite.width / 2) - (star_sprite.width / 2) + x_offset + (j * icon_size)
                 star_sprite.y = sprite.y + sprite.height + (star_sprite.height / 2) + y_offset - (offset_num * (star_sprite.height / 3))
-
+                
                 star_sprite.draw()
                 
 army_manager = ArmyManager()
