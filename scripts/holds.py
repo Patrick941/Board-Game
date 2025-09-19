@@ -14,6 +14,7 @@ class HoldManager:
         
         self.icons = self._load_icons()
         self.houses = self._create_houses_dict()
+        self.houses_upkeep = {house: (0, 0, 0, 0) for house in self.houses.keys()}
         self.holds: List[Dict[str, Any]] = []
         self.hold_markers: List[Dict[str, Any]] = []
         
@@ -136,6 +137,8 @@ class HoldManager:
                 resources = self.get_output(hold)
                 for i in range(4):
                     increase_list[i] += int(resources[i])
+        for i in range(4):
+            increase_list[i] -= self.houses_upkeep[player_house][i]
         return tuple(increase_list)
     
     def get_total_resources(self, player_house: str) -> Tuple[int, int, int, int]:
@@ -146,7 +149,6 @@ class HoldManager:
     
     def load_holds(self, turn_counter: List[int]) -> None:
         unit_types = ["_archer", "_soldier", "_knight", "_kingsguard"]
-        self.holds = []
         
         csv_path = os.path.join(self.data_dir, 'holds.csv')
         if turn_counter[0] == 1:
@@ -157,6 +159,7 @@ class HoldManager:
         
         for house_name in self.houses:
             total_resources = self.get_total_resources(house_name)
+            army_manager.update_costs(hold_manager)
             total_increase = self.get_total_increase(house_name)
             total_resources = tuple(total_resources[i] + total_increase[i] for i in range(len(total_resources)))
             self.set_total_resources(house_name, total_resources)
@@ -196,11 +199,11 @@ class HoldManager:
     
     def _get_size_multiplier(self, size: str) -> int:
         if size == "Small":
-            return 1
-        elif size == "Medium":
             return 2
+        elif size == "Medium":
+            return 5
         elif size == "Large":
-            return 4
+            return 10
         else:
             print("ERROR invalid castle size, exiting")
             exit(2)

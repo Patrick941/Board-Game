@@ -135,6 +135,25 @@ class ArmyManager:
         unit_sprites = self._draw_units(hold, camera_x, camera_y, zoom)
         
         self._draw_stars(units, unit_sprites, zoom)
+        
+    def update_costs(self, hold_manager):
+        for hold in hold_manager.holds:
+            for unit in hold["army"]:
+                if unit.unit_type == UnitType.ARCHER:
+                    cost = (1, 1, 0, 0)
+                elif unit.unit_type == UnitType.SOLDIER:
+                    cost = (1, 0, 1, 0)
+                elif unit.unit_type == UnitType.KNIGHT:
+                    cost = (1, 0, 2, 0)
+                elif unit.unit_type == UnitType.KINGSGUARD:
+                    cost = (1, 0, 2, 2)
+                else:
+                    cost = (0, 0, 0, 0)
+                
+                house = hold["house"]
+                current_upkeep = hold_manager.houses_upkeep.get(house)
+                new_upkeep = tuple(current_upkeep[i] + cost[i] for i in range(4))
+                hold_manager.houses_upkeep[house] = new_upkeep
 
     def _draw_units(self, hold, camera_x, camera_y, zoom):
         

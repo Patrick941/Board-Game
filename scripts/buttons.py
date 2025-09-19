@@ -136,7 +136,7 @@ class KingdomManager:
     def __init__(self):
         pass
     
-    def call_banners(self, selected_hold: dict, player_house: str) -> None:
+    def call_banners(self, selected_hold: dict, player_house: str, menu_manager) -> None:
         for hold in hold_manager.holds:
             if hold["house"] == player_house and hold != selected_hold:
                 for unit in hold["army"]:
