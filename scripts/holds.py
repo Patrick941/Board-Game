@@ -295,9 +295,9 @@ class HoldManager:
         else:
             return (0, 30)
     
-    def highlight_hold(self, window_width: int, window_height: int, camera_x: float, 
-                      camera_y: float, zoom: float, mouse_x: float, mouse_y: float, 
-                      tolerance: float, font_name: str) -> None:
+    def highlight_hold(self, window_width, window_height, camera_x, 
+                      camera_y, zoom, mouse_x, mouse_y, 
+                      tolerance, font_name):
         for hold in self.holds:
             x = (int(hold["x_cord"]) - camera_x) * zoom
             y = (int(hold["y_cord"]) - camera_y) * zoom
@@ -306,11 +306,12 @@ class HoldManager:
             distance = (dx**2 + dy**2)**0.5
             
             if distance < tolerance:
-                self._draw_hold_highlight(hold, x, y, zoom, font_name)
+                self._draw_hold_highlight(hold, x, y, zoom, font_name, camera_x, camera_y)
     
-    def _draw_hold_highlight(self, hold: Dict[str, Any], x: float, y: float, 
-                             zoom: float, font_name: str) -> None:
-        army_manager.show_units(hold, 0, 0, 0, 0, zoom)
+    def _draw_hold_highlight(self, hold, x, y, 
+                             zoom, font_name, camera_x, camera_y):
+        
+        army_manager.show_units(hold, 0, 0, camera_x, camera_y, zoom)
         
         defense_rating = hold.get("defense_rating", 0)
         shield_image = self._get_shield_image(defense_rating)

@@ -172,8 +172,8 @@ class ArmyManager:
             i = self.convert_type[unit.unit_type]
             image_name = house + unit.file_name
             
-            y = (int(hold["y_cord"]) - camera_y) * zoom + (icon_size * i * 2.2 * compactor)
-            x = ((int(hold["x_cord"]) - camera_x) * zoom) - (0.5 * compactor * total_unit_counts[unit.unit_type] * icon_size) - (icon_size * compactor) + (compactor * icon_size * unit_counts[unit.unit_type])
+            y = (int(hold["y_cord"]) - camera_y) + (icon_size * i * 2.2 * compactor)
+            x = ((int(hold["x_cord"]) - camera_x)) - (0.5 * compactor * total_unit_counts[unit.unit_type] * icon_size) - (icon_size * compactor) + (compactor * icon_size * unit_counts[unit.unit_type])
             unit_counts[unit.unit_type] += 1
             
             sprite_image = self.army_images[image_name.lower()]
